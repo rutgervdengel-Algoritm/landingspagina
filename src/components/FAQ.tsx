@@ -41,7 +41,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="py-20 bg-white">
+    <section id="faq" className="py-20 bg-cream-100">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -63,16 +63,16 @@ export default function FAQ() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: i * 0.05 }}
-              className="border border-navy-200 rounded-xl overflow-hidden"
+              className="border border-cream-300 rounded-2xl overflow-hidden bg-white"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex items-center justify-between p-5 text-left hover:bg-navy-50 transition-colors"
+                className="w-full flex items-center justify-between p-5 text-left hover:bg-cream-50 transition-colors"
               >
-                <span className="font-medium text-navy-900 pr-4">{faq.question}</span>
+                <span className="font-medium text-forest-600 pr-4">{faq.question}</span>
                 <ChevronDown
                   size={20}
-                  className={`text-navy-400 flex-shrink-0 transition-transform ${
+                  className={`text-teal-500 flex-shrink-0 transition-transform ${
                     openIndex === i ? 'rotate-180' : ''
                   }`}
                 />
@@ -85,7 +85,7 @@ export default function FAQ() {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="px-5 pb-5 text-navy-600 text-sm leading-relaxed">
+                    <div className="px-5 pb-5 text-navy-500 text-sm leading-relaxed">
                       {faq.answer}
                     </div>
                   </motion.div>
