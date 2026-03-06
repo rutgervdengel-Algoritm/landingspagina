@@ -15,7 +15,7 @@ export default function ROICalculator() {
   const yearlySavings = monthlySavings * 12;
 
   return (
-    <section className="py-20 bg-navy-900">
+    <section className="py-20 bg-gradient-to-br from-primary-900 to-navy-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -95,12 +95,12 @@ export default function ROICalculator() {
                   <p className="text-2xl font-bold text-white">&euro;{monthlySavings}</p>
                   <p className="text-xs text-navy-400">besparing / maand</p>
                 </div>
-                <div className="col-span-2 bg-primary-600/20 rounded-xl p-4 text-center">
-                  <TrendingUp size={24} className="text-primary-400 mx-auto mb-2" />
-                  <p className="text-3xl font-bold text-primary-400">
+                <div className="col-span-2 bg-secondary-500/20 rounded-xl p-4 text-center">
+                  <TrendingUp size={24} className="text-secondary-400 mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-secondary-400">
                     &euro;{yearlySavings.toLocaleString('nl-NL')}
                   </p>
-                  <p className="text-sm text-primary-300">geschatte jaarlijkse besparing</p>
+                  <p className="text-sm text-secondary-300">geschatte jaarlijkse besparing</p>
                 </div>
               </div>
             </div>
