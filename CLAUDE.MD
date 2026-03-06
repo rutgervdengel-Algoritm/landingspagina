@@ -69,3 +69,17 @@ npm run dev    # http://localhost:3000
 npm run build  # productie build
 npm run lint   # linting
 
+Openstaande taken
+ Formulieren koppelen aan backend (bijv. Formspree of eigen API route)
+ Analytics toevoegen (Vercel Analytics / Google Analytics)
+ Echte screenshots/mockups ter vervanging van grijze placeholders
+ SEO optimalisatie (Open Graph meta tags, sitemap)
+ Cookie consent banner
+ A/B testing voor CTA teksten
+ Logo placeholders in Hero vervangen door echte logo's
+ Login knop koppelen aan echte authenticatie
+Belangrijke notities
+Geen environment variables nodig voor huidige versie
+Alle componenten zijn 'use client' (client-side rendering voor animaties)
+package-lock.json en node_modules zijn aanwezig, dependencies zijn geïnstalleerd
+Remote landingspagina wijst naar rutgervdengel-Algoritm/landingspagina (aparte repo)
