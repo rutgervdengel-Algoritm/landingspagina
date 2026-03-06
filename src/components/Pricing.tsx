@@ -88,8 +88,8 @@ export default function Pricing() {
             >
               {plan.highlighted && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="badge-green">
-                    <Star size={14} className="mr-1" />
+                  <div className="badge bg-secondary-100 text-secondary-700">
+                    <Star size={14} className="mr-1 fill-secondary-500" />
                     Meest gekozen
                   </div>
                 </div>
