@@ -26,15 +26,33 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-cream-100 relative overflow-hidden">
+      {/* Decorative teal curved lines like CompaNanny */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        viewBox="0 0 1440 500"
+        fill="none"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M-50,250 C150,50 350,400 600,200 C850,0 1100,350 1500,150"
+          stroke="#5BA89D"
+          strokeWidth="2"
+          fill="none"
+          opacity="0.3"
+        />
+        <circle cx="200" cy="300" r="80" stroke="#5BA89D" strokeWidth="2" fill="none" opacity="0.2" />
+        <circle cx="1300" cy="150" r="60" stroke="#5BA89D" strokeWidth="2" fill="none" opacity="0.15" />
+      </svg>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="section-title">Wat anderen zeggen</h2>
+          <h2 className="section-title">Ouders over WachtlijstHelderheid</h2>
           <p className="section-subtitle">
             Ontdek waarom 100+ kinderopvangorganisaties en duizenden ouders kiezen voor
             WachtlijstHelderheid.
@@ -49,25 +67,25 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="card relative"
+              className="bg-cream-300 rounded-2xl p-6 relative"
             >
-              <Quote size={32} className="text-primary-100 absolute top-4 right-4" />
+              <Quote size={32} className="text-teal-300 absolute top-4 right-4" />
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: t.rating }).map((_, j) => (
-                  <Star key={j} size={16} className="text-warning fill-warning" />
+                  <Star key={j} size={16} className="text-terracotta-400 fill-terracotta-400" />
                 ))}
               </div>
-              <p className="text-navy-600 text-sm leading-relaxed mb-6">
+              <p className="text-forest-600 text-sm leading-relaxed mb-6 italic">
                 &ldquo;{t.text}&rdquo;
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                  <span className="text-primary-600 font-semibold text-sm">
+                <div className="w-10 h-10 bg-forest-100 rounded-full flex items-center justify-center">
+                  <span className="text-forest-600 font-semibold text-sm">
                     {t.name.split(' ').map((n) => n[0]).join('')}
                   </span>
                 </div>
                 <div>
-                  <p className="font-semibold text-navy-900 text-sm">{t.name}</p>
+                  <p className="font-semibold text-forest-600 text-sm">{t.name}</p>
                   <p className="text-xs text-navy-400">{t.role}</p>
                 </div>
               </div>

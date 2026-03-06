@@ -17,7 +17,6 @@ const plans = [
     ],
     cta: 'Gratis aanmelden',
     highlighted: false,
-    color: 'navy',
   },
   {
     name: 'Basis',
@@ -34,7 +33,6 @@ const plans = [
     ],
     cta: 'Start gratis proefperiode',
     highlighted: true,
-    color: 'primary',
   },
   {
     name: 'Pro',
@@ -52,13 +50,12 @@ const plans = [
     ],
     cta: 'Start gratis proefperiode',
     highlighted: false,
-    color: 'navy',
   },
 ];
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-20 bg-gradient-to-b from-primary-50 to-white">
+    <section id="pricing" className="py-20 bg-cream-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -82,24 +79,24 @@ export default function Pricing() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className={`rounded-2xl p-8 ${
                 plan.highlighted
-                  ? 'bg-white border-2 border-primary-600 shadow-xl relative'
-                  : 'bg-white border border-navy-200'
+                  ? 'bg-white border-2 border-terracotta-500 shadow-xl relative'
+                  : 'bg-white border border-cream-300'
               }`}
             >
               {plan.highlighted && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="badge bg-secondary-100 text-secondary-700">
-                    <Star size={14} className="mr-1 fill-secondary-500" />
+                  <div className="badge bg-terracotta-100 text-terracotta-700">
+                    <Star size={14} className="mr-1 fill-terracotta-500" />
                     Meest gekozen
                   </div>
                 </div>
               )}
 
-              <h3 className="text-xl font-bold text-navy-900">{plan.name}</h3>
+              <h3 className="text-xl font-serif font-bold text-forest-600">{plan.name}</h3>
               <p className="text-sm text-navy-500 mt-1">{plan.description}</p>
 
               <div className="mt-6">
-                <span className="text-4xl font-bold text-navy-900">
+                <span className="text-4xl font-bold text-forest-600">
                   &euro;{plan.price}
                 </span>
                 <span className="text-navy-400 ml-2">/ {plan.period}</span>
@@ -107,18 +104,18 @@ export default function Pricing() {
 
               <ul className="mt-6 space-y-3">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-sm text-navy-600">
-                    <Check size={18} className="text-success flex-shrink-0 mt-0.5" />
+                  <li key={feature} className="flex items-start gap-2 text-sm text-navy-500">
+                    <Check size={18} className="text-teal-500 flex-shrink-0 mt-0.5" />
                     {feature}
                   </li>
                 ))}
               </ul>
 
               <button
-                className={`mt-8 w-full py-3 rounded-lg font-semibold transition-all ${
+                className={`mt-8 w-full py-3 rounded-full font-semibold transition-all ${
                   plan.highlighted
-                    ? 'bg-primary-600 text-white hover:bg-primary-700'
-                    : 'bg-navy-100 text-navy-700 hover:bg-navy-200'
+                    ? 'bg-terracotta-500 text-white hover:bg-terracotta-600'
+                    : 'bg-cream-200 text-forest-600 hover:bg-cream-300'
                 }`}
               >
                 {plan.cta}

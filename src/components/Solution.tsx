@@ -31,7 +31,7 @@ const steps = [
 
 export default function Solution() {
   return (
-    <section className="py-20 bg-gradient-to-b from-primary-50 to-white">
+    <section className="py-20 bg-cream-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -44,7 +44,7 @@ export default function Solution() {
             De oplossing
           </div>
           <h2 className="section-title">
-            Hoe <span className="text-primary-600">WachtlijstHelderheid</span> het oplost
+            Hoe <span className="text-teal-600">WachtlijstHelderheid</span> het oplost
           </h2>
           <p className="section-subtitle">
             Eén platform dat wachtlijstbeheer automatiseert en ouders het vertrouwen geeft
@@ -62,11 +62,11 @@ export default function Solution() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="flex gap-4 card"
             >
-              <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <step.icon size={24} className="text-primary-600" />
+              <div className="flex-shrink-0 w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                <step.icon size={24} className="text-teal-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-navy-900 mb-1">{step.title}</h3>
+                <h3 className="font-semibold text-forest-600 mb-1">{step.title}</h3>
                 <p className="text-sm text-navy-500">{step.description}</p>
               </div>
             </motion.div>

@@ -32,7 +32,7 @@ const problems = [
 
 export default function Problem() {
   return (
-    <section id="opvang" className="py-20 bg-white">
+    <section id="opvang" className="py-20 bg-cream-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -45,7 +45,7 @@ export default function Problem() {
             Herkenbaar?
           </div>
           <h2 className="section-title">
-            Wachtlijstbeheer is een <span className="text-secondary-500">chaos</span>
+            Wachtlijstbeheer is een <span className="text-terracotta-500">chaos</span>
           </h2>
           <p className="section-subtitle">
             Kinderopvangorganisaties worstelen dagelijks met ongestructureerd wachtlijstbeheer.
@@ -63,10 +63,10 @@ export default function Problem() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="card text-center"
             >
-              <div className="w-12 h-12 bg-secondary-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <problem.icon size={24} className="text-secondary-500" />
+              <div className="w-12 h-12 bg-terracotta-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <problem.icon size={24} className="text-terracotta-500" />
               </div>
-              <h3 className="font-semibold text-navy-900 mb-2">{problem.title}</h3>
+              <h3 className="font-semibold text-forest-600 mb-2">{problem.title}</h3>
               <p className="text-sm text-navy-500">{problem.description}</p>
             </motion.div>
           ))}

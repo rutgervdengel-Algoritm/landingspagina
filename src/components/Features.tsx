@@ -93,7 +93,7 @@ export default function Features() {
   const [activeTab, setActiveTab] = useState<'opvang' | 'ouders'>('opvang');
 
   return (
-    <section id="features" className="py-20 bg-white">
+    <section id="features" className="py-20 bg-cream-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,15 +108,15 @@ export default function Features() {
         </motion.div>
 
         <div className="mt-10 flex justify-center">
-          <div className="inline-flex bg-navy-100 rounded-lg p-1">
+          <div className="inline-flex bg-cream-300 rounded-full p-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as 'opvang' | 'ouders')}
-                className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all ${
+                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-white text-primary-600 shadow-sm'
-                    : 'text-navy-500 hover:text-navy-700'
+                    ? 'bg-white text-forest-600 shadow-sm'
+                    : 'text-navy-500 hover:text-forest-500'
                 }`}
               >
                 {tab.label}
@@ -143,10 +143,10 @@ export default function Features() {
                 transition={{ duration: 0.4, delay: i * 0.05 }}
                 className="card"
               >
-                <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                  <feature.icon size={20} className="text-primary-600" />
+                <div className="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
+                  <feature.icon size={20} className="text-teal-600" />
                 </div>
-                <h3 className="font-semibold text-navy-900 mb-1">{feature.title}</h3>
+                <h3 className="font-semibold text-forest-600 mb-1">{feature.title}</h3>
                 <p className="text-sm text-navy-500">{feature.description}</p>
               </motion.div>
             ))}
