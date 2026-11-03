@@ -94,6 +94,13 @@ const config: Config = {
           800: "#754325",
           900: "#5A331D",
         },
+        // App-palet (nieuwe basis): koel papier, inkt, één signaalkleur.
+        papier: "#F5F7F6",
+        inkt: { DEFAULT: "#14213D", zacht: "#3B4A68" },
+        kalk: { DEFAULT: "#5B6577", licht: "#D9DFE3", lichter: "#EBEFF1" },
+        signaal: { DEFAULT: "#FFC93C", diep: "#E0A800", licht: "#FFF3CC" },
+        zee: { DEFAULT: "#1F6F6B", licht: "#DDEFEC" },
+        alarm: { DEFAULT: "#B4382A", licht: "#F7E1DD" },
         success: "#10b981",
         error: "#ef4444",
         warning: "#C67B4B",
@@ -101,6 +108,8 @@ const config: Config = {
       fontFamily: {
         sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
         serif: ["DM Serif Display", "Georgia", "serif"],
+        display: ["Bricolage Grotesque", "system-ui", "sans-serif"],
+        lees: ["Atkinson Hyperlegible", "system-ui", "sans-serif"],
       },
     },
   },

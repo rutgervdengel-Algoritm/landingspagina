@@ -66,3 +66,45 @@ body {
     text-wrap: balance;
   }
 }
+
+/* ===================== App (nieuwe basis) ===================== */
+.app {
+  @apply min-h-screen bg-papier font-lees text-inkt;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.app h1, .app h2, .app h3 { @apply font-display text-inkt; letter-spacing: -0.01em; }
+.app :focus-visible { outline: 3px solid #14213D; outline-offset: 2px; border-radius: 4px; }
+
+@layer components {
+  .knop {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .knop-hoofd { @apply knop bg-inkt text-papier hover:bg-inkt-zacht; }
+  .knop-signaal { @apply knop bg-signaal text-inkt hover:bg-signaal-diep; }
+  .knop-rustig { @apply knop border border-kalk-licht bg-white text-inkt hover:border-inkt; }
+  .knop-klein { @apply px-3 py-1.5 text-sm; }
+
+  .veld { @apply block w-full rounded-md border border-kalk-licht bg-white px-3 py-2.5 text-inkt placeholder:text-kalk focus:border-inkt focus:outline-none focus:ring-2 focus:ring-inkt/20; }
+  .label { @apply mb-1.5 block text-sm font-bold text-inkt; }
+  .hulp { @apply mt-1 text-sm text-kalk; }
+
+  .vlak { @apply rounded-lg border border-kalk-licht bg-white; }
+
+  /* Het volgnummer-ticket: een scheurlijn met twee uitsparingen in de kleur van de pagina. */
+  .ticket { @apply relative overflow-hidden rounded-2xl bg-signaal text-inkt; }
+  .ticket-scheur { @apply relative -mx-6 my-6 border-t-2 border-dashed border-inkt/25 sm:-mx-8; }
+  .ticket-scheur::before, .ticket-scheur::after {
+    content: ''; @apply absolute h-6 w-6 rounded-full bg-papier; top: -13px;
+  }
+  .ticket-scheur::before { left: -12px; }
+  .ticket-scheur::after { right: -12px; }
+  .volgnummer { @apply font-display font-extrabold leading-none tabular-nums; font-size: clamp(5rem, 22vw, 9rem); letter-spacing: -0.04em; }
+
+  .scorebalk { @apply h-2 overflow-hidden rounded-full bg-kalk-lichter; }
+  .scorebalk > span { @apply block h-full rounded-full bg-zee; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app * { animation: none !important; transition: none !important; }
+}

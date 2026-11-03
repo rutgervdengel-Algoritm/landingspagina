@@ -138,6 +138,6 @@ describe('positie voor ouders', () => {
       expect(pos.position).toBe(i + 1);
     }
     const laatste = positionInOffering({ sector: 'sport', offering: groep, entryId: echt[2].entryId, entries, rules, today: TODAY });
-    expect(laatste.explanation).toBe('Er staan 2 sporters voor u bij een plek in Judo 6-8.');
+    expect(laatste.explanation).toBe('Bij een plek in Judo 6-8 staan 2 sporters voor je.');
   });
 });

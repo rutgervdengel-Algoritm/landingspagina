@@ -171,7 +171,7 @@ function priorityParts(
       case 'wachttijd': {
         const wait = Math.max(0, daysBetween(entry.registeredAt.slice(0, 10), today));
         factor = wait / maxWait;
-        explanation = `Wacht ${wait} dagen (langst wachtende in deze selectie: ${maxWait} dagen)`;
+        explanation = wait === maxWait ? `Wacht ${wait} dagen, het langst van iedereen die past` : `Wacht ${wait} dagen (wie het langst wacht: ${maxWait} dagen)`;
         break;
       }
       case 'kenmerk': {
@@ -194,7 +194,7 @@ function priorityParts(
         break;
       }
     }
-    return { key: `regel:${rule.id}`, label: rule.label, score: round1(factor * max), max: round1(max), explanation };
+    return { key: `${rule.type === 'kenmerk' ? 'kenmerk' : 'regel'}:${rule.id}`, label: rule.label, score: round1(factor * max), max: round1(max), explanation };
   });
 }
 
@@ -269,9 +269,9 @@ export function rankCandidates({ sector, opening, entries, rules, today }: RankI
     const parts = [slotPart, ...prio, start];
     const score = eligible ? round1(parts.reduce((s, p) => s + p.score, 0)) : 0;
 
-    const toepasselijk = prio.filter((p) => p.score > 0 && p.key.startsWith('regel:') && !p.explanation.startsWith('Wacht'));
+    const toepasselijk = prio.filter((p) => p.score > 0 && p.key.startsWith('kenmerk:'));
     const summary = eligible
-      ? `${Math.round(score)}% passend · ${slotPart.explanation}${toepasselijk.length ? ' · ' + toepasselijk.map((p) => p.label).join(', ') : ''}`
+      ? `${Math.round(score)}% passend. ${slotPart.explanation}.${toepasselijk.length ? ' Voorrang: ' + toepasselijk.map((p) => p.label.toLowerCase()).join(', ') + '.' : ''}`
       : `Komt niet in aanmerking: ${excl.map((e) => e.explanation).join('; ')}`;
 
     return {
@@ -356,8 +356,8 @@ export function positionInOffering(params: {
     ahead,
     explanation:
       idx === 0
-        ? `Als er nu een plek in ${offering.name} vrijkomt, is uw ${p.enkelvoud} als eerste aan de beurt.`
-        : `Er ${idx === 1 ? 'staat 1 ' + p.enkelvoud : `staan ${idx} ${p.meervoud}`} voor u bij een plek in ${offering.name}.`,
+        ? `Komt er nu een plek vrij in ${offering.name}, dan ben jij als eerste aan de beurt.`
+        : `Bij een plek in ${offering.name} ${idx === 1 ? 'staat 1 ' + p.enkelvoud : `staan ${idx} ${p.meervoud}`} voor je.`,
     candidate: me,
   };
 }
