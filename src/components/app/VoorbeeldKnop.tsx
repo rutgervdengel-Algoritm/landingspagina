@@ -5,13 +5,8 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { OfferingRow } from '@/lib/db';
 import type { Sector, Slot } from '@/lib/matching/types';
+import { voorbeeldNaam } from '@/lib/voorbeeldnamen';
 
-const VOORNAMEN = ['Saar', 'Daan', 'Noor', 'Finn', 'Lieke', 'Sem', 'Julia', 'Bram', 'Fenna', 'Ties', 'Mila', 'Jesse', 'Roos', 'Luuk'];
-const ACHTERNAMEN = ['de Wit', 'Bakker', 'Visser', 'Meijer', 'de Graaf', 'Mulder', 'Bos', 'Kok', 'Smit', 'Vos'];
-
-function rnd<T>(a: T[], i: number) {
-  return a[(i * 7 + 3) % a.length];
-}
 
 /** Vult de lijst met herkenbare, fictieve inschrijvingen. Altijd weer te verwijderen. */
 export default function VoorbeeldKnop({ orgId, sector, offerings, heeftVoorbeeld }: { orgId: string; sector: Sector; offerings: OfferingRow[]; heeftVoorbeeld: boolean }) {
@@ -40,14 +35,14 @@ export default function VoorbeeldKnop({ orgId, sector, offerings, heeftVoorbeeld
             : i % 4 === 0
               ? [{ dag: 'ma', van: '16:00', tot: '16:45' }]
               : o.slots;
-        const naam = `${rnd(VOORNAMEN, i + offerings.indexOf(o) * 3)} ${rnd(ACHTERNAMEN, i * 3 + 1)}`;
+        const { kind: naam, ouder } = voorbeeldNaam(offerings.indexOf(o) * 9 + i);
         return {
           org_id: orgId,
           offering_id: o.id,
           location_id: o.location_id,
           participant_name: naam,
           participant_birthdate: geb.toISOString().slice(0, 10),
-          guardian_name: `Ouder van ${naam.split(' ')[0]}`,
+          guardian_name: ouder,
           guardian_email: `voorbeeld+${o.id.slice(0, 6)}${i}@example.com`,
           preferred_slots: slots.length ? slots : o.slots,
           level: o.level && i % 5 === 4 ? 'B' : o.level,

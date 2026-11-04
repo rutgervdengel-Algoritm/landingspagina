@@ -160,27 +160,33 @@ export default function PlekMatcher({ org, actor, today, offerings, entries, rul
               const open = opengeklapt === c.entryId;
               return (
                 <li key={c.entryId} className={`vlak ${i === 0 ? 'border-inkt' : ''}`}>
-                  <div className="flex flex-wrap items-center gap-4 p-4">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-3 p-4">
                     <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-md font-display text-2xl font-extrabold tabular-nums ${i === 0 ? 'bg-signaal' : 'bg-kalk-lichter'}`}>{i + 1}</span>
                     <div className="min-w-0 flex-1">
                       <p className="font-bold">{c.participantName}</p>
-                      <p className="text-sm text-kalk">{c.summary}</p>
+                      <p className="text-sm text-kalk">{Math.round(c.score)}% passend</p>
                     </div>
-                    <button className="knop-rustig knop-klein" onClick={() => setOpengeklapt(open ? null : c.entryId)} aria-expanded={open}>Waarom</button>
-                    <button className={i === 0 ? 'knop-hoofd knop-klein' : 'knop-rustig knop-klein'} onClick={() => doeVoorstel(c)} disabled={bezig !== null}>
-                      {bezig === c.entryId ? 'Bezig…' : 'Voorstel doen'}
-                    </button>
+                    <div className="flex w-full gap-2 sm:w-auto">
+                      <button className="knop-rustig knop-klein flex-1 sm:flex-none" onClick={() => setOpengeklapt(open ? null : c.entryId)} aria-expanded={open} aria-controls={`waarom-${c.entryId}`}>
+                        {open ? 'Verberg uitleg' : 'Waarom'}
+                      </button>
+                      <button className={`${i === 0 ? 'knop-hoofd' : 'knop-rustig'} knop-klein flex-1 sm:flex-none`} onClick={() => doeVoorstel(c)} disabled={bezig !== null}>
+                        {bezig === c.entryId ? 'Bezig…' : 'Voorstel doen'}
+                      </button>
+                    </div>
                   </div>
                   {open && (
-                    <dl className="grid gap-3 border-t border-kalk-lichter p-4">
+                    <dl id={`waarom-${c.entryId}`} className="grid gap-3 border-t border-kalk-lichter p-4">
                       {c.parts.map((p) => (
-                        <div key={p.key} className="grid gap-1 sm:grid-cols-[12rem_1fr_5rem] sm:items-center sm:gap-4">
-                          <dt className="font-bold">{p.label}</dt>
-                          <dd>
+                        <div key={p.key}>
+                          <div className="flex items-baseline justify-between gap-4">
+                            <dt className="font-bold">{p.label}</dt>
+                            <dd className="shrink-0 text-sm tabular-nums text-kalk">{Math.round(p.score)} van {Math.round(p.max)}</dd>
+                          </div>
+                          <dd className="mt-1.5">
                             <div className="scorebalk"><span style={{ width: `${p.max ? (p.score / p.max) * 100 : 0}%` }} /></div>
                             <p className="mt-1 text-sm text-kalk">{p.explanation}</p>
                           </dd>
-                          <dd className="text-right tabular-nums text-kalk">{Math.round(p.score)} / {Math.round(p.max)}</dd>
                         </div>
                       ))}
                     </dl>
