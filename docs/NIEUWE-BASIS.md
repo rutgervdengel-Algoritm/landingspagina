@@ -2,7 +2,7 @@
 
 Eén Next.js-app (landing + beheer + ouderportaal) op Vercel, met Supabase
 (Postgres + Auth) in Frankfurt. Generiek voor elke branche met wachtlijsten:
-kinderopvang, zwemles, sport en meer. Werktitel: **Zichtlijst**
+kinderopvang, zwemles, sport en meer. Naam: **Eenplekje**
 (`src/lib/brand.ts`, één regel om te wijzigen).
 
 ## Schermen

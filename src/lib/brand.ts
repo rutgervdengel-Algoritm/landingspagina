@@ -1,6 +1,6 @@
-// Werktitel. Naam wijzigen = alleen hier.
+// Naam wijzigen = alleen hier.
 export const BRAND = {
-  name: 'Zichtlijst',
-  tagline: 'Wachten, maar dan met zicht.',
-  supportEmail: 'hallo@zichtlijst.nl',
+  name: 'Eenplekje',
+  tagline: 'De wachtlijst waarop iedereen ziet waar hij staat.',
+  domain: 'eenplekje.nl',
 };

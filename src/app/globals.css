@@ -7,8 +7,8 @@ html {
 }
 
 body {
-  color: #2D5A4A;
-  background: #F7F3EC;
+  color: #14213D;
+  background: #F5F7F6;
 }
 
 @layer components {
@@ -73,7 +73,10 @@ body {
   font-size: 1.0625rem;
   line-height: 1.55;
 }
-.app h1, .app h2, .app h3 { @apply font-display text-inkt; letter-spacing: -0.01em; }
+@layer base {
+  /* In de base-laag, zodat utilities als text-papier altijd winnen. */
+  .app :where(h1, h2, h3) { @apply font-display text-inkt; letter-spacing: -0.01em; }
+}
 .app :focus-visible { outline: 3px solid #14213D; outline-offset: 2px; border-radius: 4px; }
 
 @layer components {
@@ -95,7 +98,7 @@ body {
   .ticket { @apply relative overflow-hidden rounded-2xl bg-signaal text-inkt; }
   .ticket-scheur { @apply relative -mx-6 my-6 border-t-2 border-dashed border-inkt/25 sm:-mx-8; }
   .ticket-scheur::before, .ticket-scheur::after {
-    content: ''; @apply absolute h-6 w-6 rounded-full bg-papier; top: -13px;
+    content: ''; @apply absolute h-6 w-6 rounded-full; background: var(--ticket-gat, #F5F7F6); top: -13px;
   }
   .ticket-scheur::before { left: -12px; }
   .ticket-scheur::after { right: -12px; }

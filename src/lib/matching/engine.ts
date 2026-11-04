@@ -135,8 +135,8 @@ function exclusions(
       reason: 'sloten',
       explanation:
         fit.matched.length === 0
-          ? 'Geen van de gewenste momenten past bij deze plek'
-          : `Maar ${fit.matched.length} van de minimaal ${fit.needed} gewenste momenten passen`,
+          ? `Geen van de gewenste ${cfg.slotMode === 'dagen' ? 'dagen' : 'momenten'} past bij deze plek`
+          : `Maar ${fit.matched.length} van de minimaal ${fit.needed} gewenste ${cfg.slotMode === 'dagen' ? 'dagen' : 'momenten'} passen`,
     });
   }
   return out;
