@@ -1,16 +1,9 @@
 'use client';
 
 import type { Dag, Slot } from '@/lib/matching/types';
+import { DAGEN, slotText } from '@/lib/slots';
 
-export const DAGEN: { key: Dag; kort: string; lang: string }[] = [
-  { key: 'ma', kort: 'ma', lang: 'maandag' },
-  { key: 'di', kort: 'di', lang: 'dinsdag' },
-  { key: 'wo', kort: 'wo', lang: 'woensdag' },
-  { key: 'do', kort: 'do', lang: 'donderdag' },
-  { key: 'vr', kort: 'vr', lang: 'vrijdag' },
-  { key: 'za', kort: 'za', lang: 'zaterdag' },
-  { key: 'zo', kort: 'zo', lang: 'zondag' },
-];
+export { DAGEN, slotText };
 
 interface Props {
   mode: 'dagen' | 'tijdsloten';
@@ -22,11 +15,6 @@ interface Props {
 }
 
 const eq = (a: Slot, b: Slot) => a.dag === b.dag && (a.van ?? '') === (b.van ?? '') && (a.tot ?? '') === (b.tot ?? '');
-
-export function slotText(s: Slot) {
-  const d = DAGEN.find((x) => x.key === s.dag)?.lang ?? s.dag;
-  return s.van && s.tot ? `${d} ${s.van}–${s.tot}` : d;
-}
 
 export default function SlotPicker({ mode, value, onChange, options, label }: Props) {
   if (mode === 'dagen') {

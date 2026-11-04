@@ -5,7 +5,7 @@ import { SECTORS } from '@/lib/matching/sectors';
 import type { Entry, Offering, PriorityRule, Sector, Slot } from '@/lib/matching/types';
 import { formatDate, todayISO } from '@/lib/db';
 import { BRAND } from '@/lib/brand';
-import { slotText } from '@/components/app/SlotPicker';
+import { slotText } from '@/lib/slots';
 import Volgnummer from '@/components/app/Volgnummer';
 import VoorstelKaart from '@/components/app/VoorstelKaart';
 import BevestigKnop from '@/components/app/BevestigKnop';

@@ -4,7 +4,7 @@ import { SECTORS } from '@/lib/matching/sectors';
 import { rankCandidates } from '@/lib/matching/engine';
 import { toEntry, toOffering, toRule, todayISO } from '@/lib/db';
 import { leeftijdsbereik } from '@/lib/leeftijd';
-import { slotText } from '@/components/app/SlotPicker';
+import { slotText } from '@/lib/slots';
 import VoorbeeldKnop from '@/components/app/VoorbeeldKnop';
 
 export default async function Overzicht({ searchParams }: { searchParams: { welkom?: string } }) {
