@@ -12,6 +12,7 @@ export default function Welkom() {
           <Link href="/aan-de-slag" className="vlak block p-6 hover:border-inkt">
             <h2 className="text-xl font-extrabold">Ik beheer een wachtlijst</h2>
             <p className="mt-2 text-kalk">Voor een opvang, zwemschool, club of vereniging. In een paar minuten ingericht.</p>
+            <span className="knop-signaal knop-klein mt-4">Wachtlijst inrichten</span>
           </Link>
           <div className="vlak p-6">
             <h2 className="text-xl font-extrabold">Ik sta op een wachtlijst</h2>
