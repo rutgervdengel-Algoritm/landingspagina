@@ -36,15 +36,15 @@ export default function PilotFormulier({ sector }: { sector: LandingSector | nul
 
   if (status === 'klaar') {
     return (
-      <div className="rounded-2xl bg-white p-6 sm:p-8" role="status">
+      <div className="l-vlak p-6 sm:p-8" role="status">
         <h3 className="text-2xl font-extrabold">Bedankt, {f.naam.split(' ')[0] || 'we hebben je aanmelding'}.</h3>
-        <p className="mt-2 text-kalk">We nemen binnen een paar werkdagen contact met je op om kennis te maken en te kijken of de pilot bij jullie past.</p>
+        <p className="mt-2 text-l-zacht">We nemen binnen een paar werkdagen contact met je op om kennis te maken en te kijken of de pilot bij jullie past.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={verstuur} className="grid gap-4 rounded-2xl bg-white p-6 sm:grid-cols-2 sm:p-8">
+    <form onSubmit={verstuur} className="l-vlak grid gap-4 p-6 sm:grid-cols-2 sm:p-8">
       <div>
         <label className="label" htmlFor="p-naam">Je naam</label>
         <input id="p-naam" required minLength={2} maxLength={120} autoComplete="name" className="veld" value={f.naam} onChange={(e) => setF({ ...f, naam: e.target.value })} />
@@ -91,8 +91,8 @@ export default function PilotFormulier({ sector }: { sector: LandingSector | nul
       </div>
       {fout && <p className="rounded-md bg-alarm-licht px-3 py-2 text-sm text-alarm sm:col-span-2" role="alert">{fout}</p>}
       <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
-        <button className="knop-signaal px-6 py-3 text-lg" disabled={status === 'bezig'}>{status === 'bezig' ? 'Bezig met versturen…' : 'Aanmelden voor de pilot'}</button>
-        <p className="text-sm text-kalk">We gebruiken je gegevens alleen om contact met je op te nemen over de pilot.</p>
+        <button className="l-knop-sterk text-lg disabled:opacity-50" disabled={status === 'bezig'}>{status === 'bezig' ? 'Bezig met versturen…' : 'Aanmelden voor de pilot'}</button>
+        <p className="text-sm text-l-zacht">We gebruiken je gegevens alleen om contact met je op te nemen over de pilot.</p>
       </div>
     </form>
   );

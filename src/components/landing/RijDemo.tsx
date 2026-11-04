@@ -44,7 +44,7 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-10">
       <div className="min-w-0">
-        <div className="rounded-2xl border border-kalk-licht bg-white p-5 sm:p-6">
+        <div className="l-vlak p-5 sm:p-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="text-lg font-extrabold">Jouw voorrangsregels</h3>
             {gewijzigd && (
@@ -58,7 +58,7 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
               <div key={r.id}>
                 <div className="flex items-baseline justify-between gap-4">
                   <label htmlFor={`regel-${sector}-${r.id}`} className="font-bold">{r.label}</label>
-                  <span className="shrink-0 text-sm tabular-nums text-kalk">
+                  <span className="shrink-0 text-sm tabular-nums text-l-zacht">
                     {gewicht[r.id] === 0 ? 'telt niet mee' : `${Math.round((gewicht[r.id] / totaal) * 100)}%`}
                   </span>
                 </div>
@@ -70,7 +70,7 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
                   step={10}
                   value={gewicht[r.id]}
                   onChange={(e) => setGewicht({ ...gewicht, [r.id]: Number(e.target.value) })}
-                  className="mt-1 w-full accent-inkt"
+                  className="mt-1 w-full" style={{ accentColor: 'var(--l-sterk)' }}
                 />
               </div>
             ))}
@@ -90,17 +90,17 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
                     type="button"
                     onClick={() => setGekozen(c.entryId)}
                     aria-pressed={actief}
-                    className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors ${actief ? 'border-inkt bg-white' : 'border-kalk-licht bg-white/60 hover:border-inkt'}`}
+                    className={`flex w-full items-center gap-3 border bg-l-vlak px-3 py-2.5 text-left transition-colors ${actief ? 'border-l-tekst' : 'border-l-lijn hover:border-l-tekst'}`} style={{ borderRadius: 'calc(var(--l-radius) * 0.75)' }}
                   >
-                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md font-display text-lg font-extrabold tabular-nums ${i === 0 ? 'bg-signaal' : 'bg-kalk-lichter'}`}>
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md font-lkop text-lg font-extrabold tabular-nums ${i === 0 ? 'bg-l-accent text-l-accent-tekst' : 'bg-l-zacht2'}`}>
                       {i + 1}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-bold">{c.participantName}</span>
-                      <span className="block text-sm text-kalk">{Math.round(c.score)}% passend</span>
+                      <span className="block text-sm text-l-zacht">{Math.round(c.score)}% passend</span>
                     </span>
                     {gewijzigd && verschil !== 0 && (
-                      <span className={`shrink-0 text-sm font-bold tabular-nums ${verschil > 0 ? 'text-zee' : 'text-alarm'}`}>
+                      <span className={`shrink-0 text-sm font-bold tabular-nums ${verschil > 0 ? 'text-l-op' : 'text-l-neer'}`}>
                         {verschil > 0 ? `${verschil} omhoog` : `${-verschil} omlaag`}
                       </span>
                     )}
@@ -110,10 +110,10 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
             })}
           </ol>
           {pastNiet.length > 0 && (
-            <ul className="mt-3 grid gap-1 text-sm text-kalk">
+            <ul className="mt-3 grid gap-1 text-sm text-l-zacht">
               {pastNiet.map((c) => (
                 <li key={c.entryId}>
-                  <span className="font-bold text-inkt">{c.participantName}</span> past niet: {kleineBeginletter(c.exclusions[0]?.explanation ?? '')}
+                  <span className="font-bold text-l-tekst">{c.participantName}</span> past niet: {kleineBeginletter(c.exclusions[0]?.explanation ?? '')}
                 </li>
               ))}
             </ul>
@@ -122,9 +122,9 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
       </div>
 
       <div className="min-w-0 lg:sticky lg:top-24 lg:self-start">
-        <p className="text-sm font-bold text-kalk">Wat de ouder van {positie?.candidate.participantName.split(' ')[0]} ziet</p>
+        <p className="text-sm font-bold text-l-zacht">Wat de ouder van {positie?.candidate.participantName.split(' ')[0]} ziet</p>
         {positie && <Volgnummer pos={positie} meervoud={cfg.participant.meervoud} />}
-        <p className="mt-3 text-sm text-kalk">Tik op een naam in de rij om te zien wat die ouder ziet. De namen zijn verzonnen; de rekenregel is dezelfde als in de app.</p>
+        <p className="mt-3 text-sm text-l-zacht">Tik op een naam in de rij om te zien wat die ouder ziet. De namen zijn verzonnen; de rekenregel is dezelfde als in de app.</p>
       </div>
     </div>
   );

@@ -28,15 +28,15 @@ export default function Volgnummer({ pos, meervoud }: { pos: PositionResult; mee
             <div className="flex justify-between gap-4">
               <span>{p.explanation}</span>
             </div>
-            <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-inkt/15" aria-hidden>
-              <span className="block h-full rounded-full bg-inkt" style={{ width: `${p.max ? (p.score / p.max) * 100 : 0}%` }} />
+            <div className="ticket-balk mt-1 h-1.5 overflow-hidden rounded-full" aria-hidden>
+              <span className="block h-full rounded-full bg-current" style={{ width: `${p.max ? (p.score / p.max) * 100 : 0}%` }} />
             </div>
           </li>
         ))}
       </ul>
       {pos.ahead.length > 0 && (
         <p className="mt-4 text-sm">
-          Wie voor je staat, scoort vooral hoger op {pos.ahead.map((a) => `${a.reden.toLowerCase()} (${a.aantal})`).join(', ')}.
+          Waarom anderen voor je gaan: {pos.ahead.map((a) => `${a.reden.toLowerCase()} (${a.aantal})`).join(', ')}.
         </p>
       )}
     </div>

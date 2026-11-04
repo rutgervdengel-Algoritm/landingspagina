@@ -1,5 +1,5 @@
-import Landing from '@/components/landing/Landing';
+import Keuze from '@/components/landing/Keuze';
 
 export default function Home() {
-  return <Landing sector={null} />;
+  return <Keuze />;
 }

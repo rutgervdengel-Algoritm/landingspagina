@@ -5,12 +5,21 @@ export type LandingSector = Exclude<Sector, 'overig'>;
 
 export const DEMO_TODAY = '2026-11-04';
 
+interface Blok { kop: string; tekst: string }
+
 interface SectorLanding {
   pad: string;
   naam: string;
   voor: string; // "zwemscholen"
+  kaart: string; // korte zin op de keuzepagina
+  titel: string;
   intro: string;
-  punten: { kop: string; tekst: string }[];
+  noot: string;
+  punten: Blok[];
+  stappen: Blok[];
+  ouders: { kop: string; intro: string };
+  pilot: { intro: string; punten: Blok[] };
+  vragen: { v: string; a: string }[];
   demo: { offering: Offering; rules: PriorityRule[]; entries: Entry[]; uitgelicht: string };
 }
 
@@ -52,8 +61,29 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
     pad: '/zwemles',
     naam: 'Zwemles',
     voor: 'zwemscholen',
+    kaart: 'Lesgroepen per niveau en leeftijd, meerdere lesmomenten, minder telefoontjes aan het bad.',
+    titel: 'Ouders zien zelf waar hun kind staat voor zwemles.',
+    noot: 'Eenplekje is nieuw. We zoeken drie zwemscholen die de eerste versie gratis gebruiken en ons vertellen wat beter moet.',
+    stappen: [
+      { kop: 'Zet je lesgroepen erin', tekst: 'Per groep het niveau, de leeftijd en de lesmomenten. Je voorrangsregels stel je in met een paar schuifjes.' },
+      { kop: 'Plak je wachtlijst', tekst: 'Uit Excel of Google Sheets. Naam, geboortedatum, e-mail en inschrijfdatum worden herkend.' },
+      { kop: 'Lesplek vrij? Doe een voorstel', tekst: 'Kies de groep en het moment. Je ziet wie aan de beurt is en waarom. De ouder accepteert of wijst af via de app.' },
+    ],
+    ouders: { kop: 'Minder telefoontjes aan het bad', intro: 'De meeste vragen over een zwemwachtlijst gaan over één ding: wanneer is mijn kind aan de beurt? Met Eenplekje zien ouders zelf op welke plek ze staan en waarom.' },
+    pilot: {
+      intro: 'We zoeken drie zwemscholen met een wachtlijst die Eenplekje een paar maanden gratis gebruiken.',
+      punten: [
+        { kop: 'Wij', tekst: 'richten het samen met je in en zetten je lijst erin.' },
+        { kop: 'Jij', tekst: 'gebruikt het bij echte vrije lesplekken en vertelt wat beter moet.' },
+        { kop: 'Samen', tekst: 'bepalen we daarna of en voor welke prijs je doorgaat.' },
+      ],
+    },
+    vragen: [
+      { v: 'Werkt het met meerdere baden of locaties?', a: 'De basis ondersteunt meerdere locaties. Tijdens de pilot richten we die samen in.' },
+      { v: 'Wat als een kind tussentijds een niveau omhoog gaat?', a: 'Dan pas je het niveau aan en telt het kind mee voor groepen op dat niveau. Inschrijvingen aanpassen in het scherm bouwen we tijdens de pilot verder uit.' },
+    ],
     intro:
-      'Ouders zien op welke plek hun kind staat voor zwemles, en waarom. Jij ziet bij elk vrij lesmoment direct wie aan de beurt is, op niveau, leeftijd en jouw voorrangsregels.',
+      'Met de reden erbij, zodat ze niet meer hoeven te bellen. Jij ziet bij elk vrij lesmoment direct wie aan de beurt is, op niveau, leeftijd en jouw voorrangsregels.',
     punten: [
       { kop: 'Niveau en leeftijd zijn harde eisen', tekst: 'Een plek in groep A gaat nooit naar een kind dat al voor B zwemt of nog te jong is.' },
       { kop: 'Meerdere lesmomenten', tekst: 'Ouders geven aan welke tijden passen. Komt er één vrij, dan tellen alle kinderen mee voor wie die tijd werkt.' },
@@ -83,8 +113,29 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
     pad: '/sport',
     naam: 'Sport',
     voor: 'sportclubs',
+    kaart: 'Groepen per leeftijd en trainingstijd, clubregels die iedereen kan zien.',
+    titel: 'Een eerlijke wachtlijst voor je club.',
     intro:
-      'Leden in spe zien op welke plek ze staan voor hun groep, en waarom. Jij ziet bij elke vrije plek direct wie aan de beurt is, op leeftijd, trainingstijd en de regels van je club.',
+      'Wachtende leden zien zelf op welke plek ze staan voor hun groep, en waarom. Wie de ledenadministratie doet, ziet bij elke vrije plek direct wie aan de beurt is, volgens de clubregels.',
+    noot: 'Eenplekje is nieuw. We zoeken drie clubs die de eerste versie gratis gebruiken en ons vertellen wat beter moet.',
+    stappen: [
+      { kop: 'Zet je groepen erin', tekst: 'Per groep de leeftijd en de trainingstijden. De clubregels voor voorrang stel je in met een paar schuifjes.' },
+      { kop: 'Plak je wachtlijst', tekst: 'Uit Excel of Google Sheets, ook als die nu bij één vrijwilliger op de laptop staat.' },
+      { kop: 'Plek vrij? Doe een voorstel', tekst: 'Kies de groep. Je ziet wie er aan de beurt is en waarom, en doet met één klik een voorstel.' },
+    ],
+    ouders: { kop: 'Minder discussie over wie er eerst was', intro: 'Bij een volle club gaat het al snel over eerlijkheid. Met Eenplekje ziet iedereen dezelfde regels en zijn eigen plek in de rij.' },
+    pilot: {
+      intro: 'We zoeken drie sportclubs met een wachtlijst die Eenplekje een paar maanden gratis gebruiken.',
+      punten: [
+        { kop: 'Wij', tekst: 'richten het samen met je in en zetten je lijst erin.' },
+        { kop: 'Jullie', tekst: 'gebruiken het bij echte vrije plekken en vertellen wat beter moet.' },
+        { kop: 'Samen', tekst: 'bepalen we daarna of en voor welke prijs jullie doorgaan.' },
+      ],
+    },
+    vragen: [
+      { v: 'Ons bestuur wisselt elk jaar. Blijft de lijst bewaard?', a: 'Ja. De lijst staat niet meer bij één persoon, en elk besluit staat met reden in het log.' },
+      { v: 'Kunnen we voorrang geven aan inwoners of broertjes en zusjes?', a: 'Ja. Dat zijn regels die je zelf aanzet en weegt. Wachtende leden zien welke regels er gelden.' },
+    ],
     punten: [
       { kop: 'Groepen per leeftijd', tekst: 'Een plek bij de 6- tot 8-jarigen gaat alleen naar kinderen die op dat moment die leeftijd hebben.' },
       { kop: 'Vaste trainingstijden', tekst: 'Wie niet op zaterdagochtend kan, komt niet in aanmerking voor de zaterdaggroep en ziet ook waarom.' },
@@ -112,16 +163,39 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
   kinderopvang: {
     pad: '/kinderopvang',
     naam: 'Kinderopvang',
-    voor: 'kinderopvang',
+    voor: 'opvangorganisaties',
+    kaart: 'Plaatsingsbeleid vastleggen, elk besluit onderbouwen, ouders zelf laten meekijken.',
+    titel: 'Een wachtlijst die je kunt uitleggen.',
     intro:
-      'Ouders zien op welke plek hun kind staat voor de opvang, en waarom. Jij ziet bij elke vrije plek direct wie aan de beurt is, op leeftijdsgroep, dagen en je plaatsingsbeleid.',
+      'Leg je plaatsingsbeleid vast en zie bij elke vrije plek wie volgens dat beleid voorgaat, en waarom. Ouders zien zelf hun plek in de rij. Elk besluit staat in een log dat niet te wijzigen is.',
+    noot: 'Eenplekje is een nieuw product. We zoeken drie opvangorganisaties voor een begeleide pilot van een paar maanden, zonder kosten.',
+    stappen: [
+      { kop: 'Leg je plaatsingsbeleid vast', tekst: 'Groepen per leeftijd en dag, en de voorrangsregels die je nu al hanteert, zoals broertjes en zusjes of kinderen van medewerkers.' },
+      { kop: 'Zet je wachtlijst erin', tekst: 'Met een export uit je huidige systeem of Excel. Tijdens de pilot doen we dat samen en controleer jij het resultaat.' },
+      { kop: 'Onderbouw elke plaatsing', tekst: 'Bij een vrije plek zie je wie volgens het beleid voorgaat en waarom. Het voorstel en de reactie van de ouder worden vastgelegd.' },
+    ],
+    ouders: { kop: 'Minder vragen, meer vertrouwen', intro: 'Ouders willen vooral weten waar ze staan en of het eerlijk gaat. Met Eenplekje zien ze hun plek in de rij en de regels die gelden, zonder dat ze gegevens van andere gezinnen zien.' },
+    pilot: {
+      intro: 'Een begeleide pilot van ongeveer drie maanden met één of twee locaties, zonder kosten. Dit is ons voorstel voor het verloop.',
+      punten: [
+        { kop: 'Kennismaking', tekst: 'We bespreken je plaatsingsbeleid en je wachtlijst, en sluiten een verwerkersovereenkomst.' },
+        { kop: 'Inrichten', tekst: 'Wij zetten groepen, regels en je lijst erin. Jij controleert of de volgorde klopt met hoe je nu werkt.' },
+        { kop: 'Gebruiken', tekst: 'Acht tot tien weken bij echte vrije plekken, met een korte check-in per week.' },
+        { kop: 'Evalueren', tekst: 'Samen kijken naar tijdsbesteding, vragen van ouders en ervaring van je team. Daarna besluit je of je doorgaat.' },
+      ],
+    },
+    vragen: [
+      { v: 'Werkt het naast onze planningssoftware?', a: 'Ja, Eenplekje vervangt je planning of administratie niet. Je zet de wachtlijst erin met een export. Een koppeling met jullie systeem is er nog niet; die onderzoeken we samen als de pilot bevalt.' },
+      { v: 'Wie is verantwoordelijk voor de gegevens?', a: 'Jullie organisatie blijft verwerkingsverantwoordelijke. Eenplekje is verwerker. Dat leggen we vast in een verwerkersovereenkomst voordat er echte gegevens in gaan.' },
+      { v: 'Wat gebeurt er met de gegevens als we stoppen?', a: 'Dan verwijderen we alle gegevens van jullie organisatie, inclusief het beslissingslog. Een export voor je eigen archief maken we vooraf samen.' },
+    ],
     punten: [
       { kop: 'Plaatsen per dag', tekst: 'Ouders geven hun dagen op en hoeveel dagen minimaal goed is. Een plek op maandag en dinsdag wordt dus ook voorgesteld aan wie drie dagen wil maar twee accepteert.' },
       { kop: 'Leeftijdsgroepen', tekst: 'Een babyplek gaat nooit naar een peuter. De leeftijd op de startdatum telt.' },
       { kop: 'Verantwoording', tekst: 'Elk voorstel en elke reactie staat met reden in een log dat niet te wijzigen is. Handig bij vragen van ouders.' },
     ],
     demo: {
-      uitgelicht: 'd21',
+      uitgelicht: 'd23',
       offering: { id: 'k', name: 'Babygroep', minAgeMonths: 0, maxAgeMonths: 18, slots: [{ dag: 'ma' }, { dag: 'di' }] },
       rules: [
         { id: 'wacht', type: 'wachttijd', label: 'Inschrijfdatum', weight: 50, active: true },
@@ -144,7 +218,7 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
 export const FAQ = [
   {
     v: 'Wat kost het?',
-    a: 'Tijdens de pilot niets. Daarna bepalen we samen een prijs die past bij wat het jou oplevert. Je zit nergens aan vast.',
+    a: 'Tijdens de pilot niets. Daarna bepalen we samen een prijs die past bij wat het oplevert. Je zit nergens aan vast.',
   },
   {
     v: 'Moeten ouders een app installeren?',

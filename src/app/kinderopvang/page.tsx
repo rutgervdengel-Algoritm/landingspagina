@@ -3,7 +3,7 @@ import Landing from '@/components/landing/Landing';
 import { LANDING } from '@/components/landing/content';
 
 export const metadata: Metadata = {
-  title: 'Eenplekje voor kinderopvang',
+  title: 'Eenplekje voor opvangorganisaties',
   description: LANDING.kinderopvang.intro,
 };
 

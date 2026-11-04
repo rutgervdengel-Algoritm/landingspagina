@@ -95,8 +95,9 @@ body {
   .vlak { @apply rounded-lg border border-kalk-licht bg-white; }
 
   /* Het volgnummer-ticket: een scheurlijn met twee uitsparingen in de kleur van de pagina. */
-  .ticket { @apply relative overflow-hidden rounded-2xl bg-signaal text-inkt; }
-  .ticket-scheur { @apply relative -mx-6 my-6 border-t-2 border-dashed border-inkt/25 sm:-mx-8; }
+  .ticket { @apply relative overflow-hidden rounded-2xl; background: var(--ticket-bg, #FFC93C); color: var(--ticket-tekst, #14213D); border-radius: var(--ticket-radius, 1rem); }
+  .ticket-scheur { @apply relative -mx-6 my-6 border-t-2 border-dashed sm:-mx-8; border-color: color-mix(in srgb, currentColor 25%, transparent); }
+  .ticket-balk { background: color-mix(in srgb, currentColor 15%, transparent); }
   .ticket-scheur::before, .ticket-scheur::after {
     content: ''; @apply absolute h-6 w-6 rounded-full; background: var(--ticket-gat, #F5F7F6); top: -13px;
   }
@@ -110,4 +111,56 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .app * { animation: none !important; transition: none !important; }
+}
+
+/* ===================== Landingspagina's per branche ===================== */
+/* Eén set tokens per branche. Componenten gebruiken alleen de l-* kleuren. */
+.landing {
+  --l-bg: #F5F7F6; --l-vlak: #FFFFFF; --l-tekst: #14213D; --l-zacht: #5B6577; --l-lijn: #D9DFE3;
+  --l-accent: #FFC93C; --l-accent-tekst: #14213D; --l-sterk: #14213D; --l-sterk-tekst: #F5F7F6;
+  --l-band: #14213D; --l-band-tekst: #E8ECF2; --l-band-accent: #FFC93C; --l-zachtvlak: #FFF3CC;
+  --l-op: #1F6F6B; --l-neer: #B4382A;
+  --l-kop: "Bricolage Grotesque", system-ui, sans-serif;
+  --l-radius: 1rem;
+  --ticket-bg: var(--l-accent); --ticket-tekst: var(--l-accent-tekst); --ticket-gat: var(--l-bg);
+  background: var(--l-bg); color: var(--l-tekst);
+  font-family: "Atkinson Hyperlegible", system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.6;
+}
+.landing :where(h1, h2, h3) { font-family: var(--l-kop); color: inherit; letter-spacing: -0.015em; text-wrap: balance; }
+.landing :focus-visible { outline: 3px solid var(--l-tekst); outline-offset: 2px; border-radius: 4px; }
+
+/* Zwemles: fris en levendig. Water, licht, beweging. */
+.landing[data-thema="zwemles"] {
+  --l-bg: #F1F9FB; --l-tekst: #08344F; --l-zacht: #4B6B7E; --l-lijn: #CBE5EC;
+  --l-accent: #57D3E8; --l-accent-tekst: #08344F; --l-sterk: #08344F; --l-sterk-tekst: #FFFFFF;
+  --l-band: #08344F; --l-band-tekst: #E3F6FA; --l-band-accent: #7FE0F0; --l-zachtvlak: #DDF4F8;
+  --l-op: #0A7D73; --l-neer: #C0392B;
+}
+/* Sport: energiek, clubgevoel. Veldgroen met oranje. */
+.landing[data-thema="sport"] {
+  --l-bg: #F3F5F0; --l-tekst: #10281C; --l-zacht: #4E6255; --l-lijn: #D3DCCF;
+  --l-accent: #FF7A33; --l-accent-tekst: #1A140F; --l-sterk: #134A2F; --l-sterk-tekst: #FFFFFF;
+  --l-band: #134A2F; --l-band-tekst: #E9F1EA; --l-band-accent: #FFB27F; --l-zachtvlak: #FFE6D6;
+  --l-op: #1E7A45; --l-neer: #B8401F;
+  --l-kop: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --l-radius: 0.5rem;
+}
+.landing[data-thema="sport"] :where(h1, h2, h3) { letter-spacing: 0; font-weight: 800; }
+/* Kinderopvang: rustig en zakelijk. Steen, leisteen, gedempt groen. */
+.landing[data-thema="kinderopvang"] {
+  --l-bg: #F3F4F6; --l-tekst: #1C2735; --l-zacht: #536070; --l-lijn: #D8DCE2;
+  --l-accent: #DCE8E2; --l-accent-tekst: #1C2735; --l-sterk: #1C2735; --l-sterk-tekst: #FFFFFF;
+  --l-band: #1C2735; --l-band-tekst: #E4E8EE; --l-band-accent: #A9CBBB; --l-zachtvlak: #E6ECEA;
+  --l-op: #3C6E58; --l-neer: #A43D33;
+  --l-kop: "Newsreader", Georgia, serif;
+  --l-radius: 0.375rem;
+}
+.landing[data-thema="kinderopvang"] :where(h1, h2, h3) { font-weight: 500; letter-spacing: -0.01em; }
+
+@layer components {
+  .l-knop { @apply inline-flex items-center justify-center gap-2 px-5 py-3 font-bold transition-colors; border-radius: calc(var(--l-radius) * 0.6); }
+  .l-knop-sterk { @apply l-knop bg-l-sterk text-l-sterk-tekst hover:opacity-90; }
+  .l-knop-accent { @apply l-knop bg-l-accent text-l-accent-tekst hover:brightness-95; }
+  .l-knop-rustig { @apply l-knop border border-l-lijn bg-l-vlak text-l-tekst hover:border-l-tekst; }
+  .l-vlak { @apply border border-l-lijn bg-l-vlak; border-radius: var(--l-radius); }
 }
