@@ -4,6 +4,8 @@ import { SECTORS } from '@/lib/matching/sectors';
 import Volgnummer from '@/components/app/Volgnummer';
 import Logo from './Logo';
 import RijDemo from './RijDemo';
+import AppVenster from './AppVenster';
+import { Lock, MapPin, Smartphone } from 'lucide-react';
 import PilotFormulier from './PilotFormulier';
 import { DEMO_TODAY, FAQ, LANDING, type LandingSector } from './content';
 
@@ -40,8 +42,27 @@ const LOG_VOORBEELD = [
   { wanneer: '15 okt, 20:41', wie: 'Ouder', wat: 'Voorstel geaccepteerd', waarom: '' },
 ];
 
-export default function Landing({ sector }: { sector: LandingSector }) {
+/** Kop met het laatste woord omcirkeld, zoals in het oorspronkelijke ontwerp. */
+function OmcirkeldeKop({ tekst }: { tekst: string }) {
+  const woorden = tekst.replace(/\.$/, '').split(' ');
+  const laatste = woorden.pop();
+  return (
+    <>
+      {woorden.join(' ')}{' '}
+      <span className="relative inline-block">
+        <span className="relative z-10">{laatste}</span>
+        <svg className="absolute -left-3 -right-3 -top-2 z-0 h-[calc(100%+16px)] w-[calc(100%+24px)]" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden>
+          <ellipse cx="100" cy="40" rx="95" ry="35" fill="none" stroke="#5BA89D" strokeWidth="2" />
+        </svg>
+      </span>
+      .
+    </>
+  );
+}
+
+export default function Landing({ sector, ontwerp }: { sector: LandingSector; ontwerp?: 'warm' }) {
   const s = LANDING[sector];
+  const warm = ontwerp === 'warm';
   const opvang = sector === 'kinderopvang';
   const sport = sector === 'sport';
   const zwem = sector === 'zwemles';
@@ -57,7 +78,7 @@ export default function Landing({ sector }: { sector: LandingSector }) {
   const vragen = [...s.vragen, ...FAQ];
 
   return (
-    <div className="landing min-h-screen" data-thema={sector}>
+    <div className="landing min-h-screen" data-thema={warm ? 'opvang-warm' : sector}>
       <header className="sticky top-0 z-20 border-b border-l-lijn" style={{ background: 'color-mix(in srgb, var(--l-bg) 92%, transparent)', backdropFilter: 'blur(8px)' }}>
         {sport && <div className="h-1 bg-l-accent" aria-hidden />}
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
@@ -69,7 +90,9 @@ export default function Landing({ sector }: { sector: LandingSector }) {
             <a href="#hoe" className="hidden rounded-md px-3 py-2 font-bold hover:bg-l-zacht2 md:inline-block">Hoe het werkt</a>
             <a href="#ouders" className="hidden rounded-md px-3 py-2 font-bold hover:bg-l-zacht2 md:inline-block">Voor ouders</a>
             <Link href="/login" className="rounded-md px-3 py-2 font-bold hover:bg-l-zacht2">Inloggen</Link>
-            <a href="#pilot" className="l-knop-sterk px-4 py-2 text-sm">{opvang ? 'Pilot aanvragen' : 'Doe mee'}</a>
+            <a href="#pilot" className="l-knop-sterk whitespace-nowrap px-4 py-2 text-sm">
+              {warm ? (<><span className="sm:hidden">Demo</span><span className="hidden sm:inline">Demo aanvragen</span></>) : opvang ? (<><span className="sm:hidden">Pilot</span><span className="hidden sm:inline">Pilot aanvragen</span></>) : 'Doe mee'}
+            </a>
           </nav>
         </div>
       </header>
@@ -77,23 +100,47 @@ export default function Landing({ sector }: { sector: LandingSector }) {
       <main>
         {/* Hero */}
         <section
-          className="relative"
+          className="relative overflow-hidden"
           style={sport ? { backgroundImage: 'repeating-linear-gradient(90deg, transparent 0 119px, color-mix(in srgb, var(--l-sterk) 6%, transparent) 119px 120px)' } : undefined}
         >
-          <div className={`mx-auto grid max-w-6xl gap-10 px-4 pb-16 pt-12 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:pb-24 lg:pt-20 ${opvang ? 'items-start' : 'items-center'}`}>
-            <div className={`min-w-0 ${opvang ? 'lg:pt-16' : ''}`}>
+          {warm && (
+            <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-20" viewBox="0 0 1440 600" fill="none" preserveAspectRatio="none" aria-hidden>
+              <path d="M-100,300 C200,100 400,500 700,250 C1000,0 1200,400 1540,200" stroke="#5BA89D" strokeWidth="3" />
+            </svg>
+          )}
+          <div className={`relative mx-auto grid max-w-6xl gap-10 px-4 pb-16 pt-12 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:pb-24 lg:pt-20 ${opvang && !warm ? 'items-start' : 'items-center'}`}>
+            <div className={`min-w-0 ${opvang && !warm ? 'lg:pt-16' : ''}`}>
               <h1
                 className={`max-w-2xl font-extrabold ${sport ? 'text-[clamp(3rem,9vw,5.75rem)] leading-[0.92]' : opvang ? 'text-[clamp(2.4rem,6vw,4rem)] leading-[1.05]' : 'text-[clamp(2.4rem,6.5vw,4.25rem)] leading-[1.02]'}`}
               >
-                {s.titel}
+                {warm ? <OmcirkeldeKop tekst={s.titel} /> : s.titel}
               </h1>
               <p className="mt-6 max-w-xl text-lg text-l-zacht sm:text-xl">{s.intro}</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href="#pilot" className={`${opvang ? 'l-knop-sterk' : 'l-knop-accent'} px-6 py-3 text-lg`}>{opvang ? 'Pilot aanvragen' : 'Doe mee met de pilot'}</a>
-                <a href="#demo" className="l-knop-rustig px-6 py-3 text-lg">Probeer de rij</a>
+                <a href="#pilot" className={`${opvang ? 'l-knop-sterk' : 'l-knop-accent'} px-6 py-3 text-lg`}>{warm ? 'Demo aanvragen' : opvang ? 'Pilot aanvragen' : 'Doe mee met de pilot'}</a>
+                <a href="#demo" className="l-knop-rustig px-6 py-3 text-lg">{warm ? 'Bekijk hoe het werkt' : 'Probeer de rij'}</a>
               </div>
+              {warm && (
+                <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium">
+                  {[
+                    { icoon: MapPin, tekst: 'Gegevens in de EU' },
+                    { icoon: Lock, tekst: 'Onwijzigbaar beslissingslog' },
+                    { icoon: Smartphone, tekst: 'Geen app nodig voor ouders' },
+                  ].map((t) => (
+                    <li key={t.tekst} className="flex items-center gap-2">
+                      <t.icoon size={18} style={{ color: '#5BA89D' }} aria-hidden />
+                      {t.tekst}
+                    </li>
+                  ))}
+                </ul>
+              )}
               <p className="mt-6 max-w-md text-sm text-l-zacht">{s.noot}</p>
             </div>
+            {warm ? (
+              <div className="mx-auto w-full max-w-md min-w-0 lg:mr-0">
+                <AppVenster sector={sector} />
+              </div>
+            ) : (
             <div className="min-w-0">
               <div className={`mx-auto max-w-md lg:mr-0 ${zwem ? 'rotate-[-1.5deg]' : ''}`}>
                 <p className="mb-1 pl-1 text-sm font-bold text-l-zacht">Dit ziet de ouder van {positie.candidate.participantName.split(' ')[0]}</p>
@@ -114,6 +161,7 @@ export default function Landing({ sector }: { sector: LandingSector }) {
                 </div>
               )}
             </div>
+            )}
           </div>
         </section>
 

@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <Landing sector="kinderopvang" />;
+  return <Landing sector="kinderopvang" ontwerp="warm" />;
 }

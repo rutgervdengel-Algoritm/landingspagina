@@ -5,7 +5,7 @@ import { LANDING, type LandingSector } from './content';
 const KAART_KLEUR: Record<LandingSector, { bg: string; tekst: string; accent: string }> = {
   zwemles: { bg: '#E3F5F9', tekst: '#08344F', accent: '#57D3E8' },
   sport: { bg: '#E8F0E6', tekst: '#10281C', accent: '#FF7A33' },
-  kinderopvang: { bg: '#E9ECEF', tekst: '#1C2735', accent: '#A9CBBB' },
+  kinderopvang: { bg: '#F0EADF', tekst: '#2D5A4A', accent: '#C67B4B' },
 };
 
 /** Startpagina: kies je branche. Elke branche heeft een eigen pagina met eigen toon. */

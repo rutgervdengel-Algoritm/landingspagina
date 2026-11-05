@@ -164,3 +164,20 @@ body {
   .l-knop-rustig { @apply l-knop border border-l-lijn bg-l-vlak text-l-tekst hover:border-l-tekst; }
   .l-vlak { @apply border border-l-lijn bg-l-vlak; border-radius: var(--l-radius); }
 }
+
+/* Kinderopvang, eigen ontwerp van Rutger: crème, bosgroen, terracotta, turquoise. */
+.landing[data-thema="opvang-warm"] {
+  --l-bg: #F7F3EC; --l-vlak: #FFFFFF; --l-tekst: #2D5A4A; --l-zacht: #6B6155; --l-lijn: #E8DFD0;
+  --l-accent: #D5EDEA; --l-accent-tekst: #264D3F; --l-sterk: #B56A3B; --l-sterk-tekst: #FFFFFF;
+  --l-band: #2D5A4A; --l-band-tekst: #F7F3EC; --l-band-accent: #ABDBD4; --l-zachtvlak: #F0EADF;
+  --l-op: #3E736B; --l-neer: #955530;
+  --l-kop: "DM Serif Display", Georgia, serif;
+  --l-radius: 1rem;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+.landing[data-thema="opvang-warm"] :where(h1, h2, h3) { font-weight: 400; letter-spacing: 0; }
+.landing[data-thema="opvang-warm"] :where(h3) { font-family: "Plus Jakarta Sans", system-ui, sans-serif; font-weight: 700; }
+.landing[data-thema="opvang-warm"] .l-knop { border-radius: 9999px; }
+.landing[data-thema="opvang-warm"] .l-knop-rustig { border-width: 2px; border-color: #2D5A4A; color: #2D5A4A; background: transparent; }
+.landing[data-thema="opvang-warm"] .l-knop-rustig:hover { background: #2D5A4A; color: #FFFFFF; }
+.landing[data-thema="opvang-warm"] .l-vlak { border-color: #E8DFD0; }
