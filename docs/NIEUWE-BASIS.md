@@ -54,8 +54,10 @@ Alle drie staan live op project `wachtlijst-pilot` (eu-central-1).
   het kind de minimumleeftijd van de groep bereikt, als die later is dan vandaag (`peildatum` in de engine).
 - Inrichten: snelle keuze Babygroep, Peutergroep, Verticale groep, BSO; voorrangsregel
   "Stroomt door vanuit onze eigen opvang" (kenmerk `doorstroom`, staat aan bij BSO).
-- Pilotformulier: soort opvang en aantal locaties staan tussen haken bovenaan `bericht`
-  (geen schemawijziging nodig); `bron` is de pagina (`bso`, `kinderopvang`, ...).
+- Pilotformulier: `opvangsoort` en `locaties` als eigen kolommen (`0005`); `bron` is de pagina (`bso`, `kinderopvang`, ...).
+- Voorstellen verlopen vanzelf (`0005`, `verloop_voorstellen()`): elk uur via pg_cron en bij het openen
+  van beheer en het ouderportaal. Overzicht toont open plekken; via "Volgende voorstellen" ga je verder
+  met dezelfde plek (`/beheer/plek?plek=<id>`).
 
-Open: database staat op pauze (gratis plan), site is niet openbaar (Vercel-beveiliging, geen domein),
-geen melding bij een nieuwe aanmelding, voorstel verloopt pas als de ouder het opent.
+Open: site is niet openbaar (Vercel-beveiliging, geen domein), geen melding bij een nieuwe aanmelding,
+database pauzeert op het gratis plan na een week zonder activiteit.

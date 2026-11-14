@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { getOrgContext, loadWaitlist } from '@/lib/org';
+import { getOrgContext, loadOpenPlekken, loadWaitlist } from '@/lib/org';
 import { SECTORS } from '@/lib/matching/sectors';
 import { rankCandidates } from '@/lib/matching/engine';
-import { toEntry, toOffering, toRule, todayISO } from '@/lib/db';
+import { formatDate, toEntry, toOffering, toRule, todayISO } from '@/lib/db';
 import { leeftijdsbereik } from '@/lib/leeftijd';
 import { slotText } from '@/lib/slots';
 import VoorbeeldKnop from '@/components/app/VoorbeeldKnop';
@@ -10,6 +10,8 @@ import VoorbeeldKnop from '@/components/app/VoorbeeldKnop';
 export default async function Overzicht({ searchParams }: { searchParams: { welkom?: string } }) {
   const { org } = await getOrgContext();
   const { offerings, entries, rules } = await loadWaitlist(org.id);
+  const openPlekken = await loadOpenPlekken(org.id);
+  const naam = (id: string) => entries.find((e) => e.id === id)?.participant_name ?? 'Onbekend';
   const cfg = SECTORS[org.sector];
   const today = todayISO();
   const wachtend = entries.filter((e) => e.status === 'wachtend');
@@ -40,6 +42,43 @@ export default async function Overzicht({ searchParams }: { searchParams: { welk
           <Link href="/beheer/plek" className="knop-signaal">Plek vrijgekomen</Link>
         </div>
       </div>
+
+      {openPlekken.length > 0 && (
+        <section className="mt-8" aria-labelledby="open-plekken">
+          <h2 id="open-plekken" className="text-2xl font-extrabold">Open plekken</h2>
+          <ul className="mt-3 grid gap-3">
+            {openPlekken.map((p) => {
+              const groep = offerings.find((o) => o.id === p.offering_id);
+              const lopend = p.offers.filter((v) => v.status === 'voorgesteld');
+              const afgewezen = p.offers.filter((v) => v.status === 'afgewezen').length;
+              const verlopen = p.offers.filter((v) => v.status === 'verlopen').length;
+              const vrij = p.num_spots - p.spots_filled - lopend.length;
+              return (
+                <li key={p.id} className={`vlak p-5 ${vrij > 0 ? 'border-inkt' : ''}`}>
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-bold">{groep?.name ?? 'Groep'}, vanaf {formatDate(p.start_date)}</p>
+                      <p className="text-sm capitalize text-kalk">{p.slots.map(slotText).join(', ')}</p>
+                    </div>
+                    {vrij > 0 && <Link href={`/beheer/plek?plek=${p.id}`} className="knop-hoofd knop-klein">Volgende voorstellen</Link>}
+                  </div>
+                  <ul className="mt-3 grid gap-1 text-sm">
+                    {lopend.map((v) => (
+                      <li key={v.id}>Voorstel loopt voor <strong>{naam(v.entry_id)}</strong>, reageren kan tot en met {formatDate(v.expires_at)}.</li>
+                    ))}
+                    {(afgewezen > 0 || verlopen > 0) && (
+                      <li className="text-kalk">
+                        {[afgewezen > 0 && `${afgewezen} afgewezen`, verlopen > 0 && `${verlopen} verlopen zonder reactie`].filter(Boolean).join(', ')}.
+                      </li>
+                    )}
+                    {vrij > 0 && <li className="font-bold">{lopend.length === 0 ? 'Er loopt geen voorstel meer. De volgende in de rij is aan de beurt.' : `Nog ${vrij} ${vrij === 1 ? 'plek' : 'plekken'} zonder voorstel.`}</li>}
+                  </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       <div className="mt-8 grid gap-5">
         {offerings.map((o) => {

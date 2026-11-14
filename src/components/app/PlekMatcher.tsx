@@ -8,6 +8,7 @@ import { rankCandidates } from '@/lib/matching/engine';
 import type { CandidateResult, Slot } from '@/lib/matching/types';
 import { formatDate, toEntry, toOffering, toRule, type EntryRow, type LocationRow, type OfferingRow, type OrgRow, type RuleRow } from '@/lib/db';
 import SlotPicker, { slotText } from './SlotPicker';
+import type { OpenPlek } from '@/lib/org';
 
 interface Props {
   org: OrgRow;
@@ -17,19 +18,23 @@ interface Props {
   offerings: OfferingRow[];
   entries: EntryRow[];
   rules: RuleRow[];
+  /** Een plek die al openstaat; dan ga je verder waar je was. */
+  bestaand?: OpenPlek;
 }
 
 interface Gedaan { entryId: string; naam: string; email: string; bericht: string }
 
-export default function PlekMatcher({ org, actor, today, offerings, entries, rules }: Props) {
+export default function PlekMatcher({ org, actor, today, offerings, entries, rules, bestaand }: Props) {
   const router = useRouter();
   const cfg = SECTORS[org.sector];
-  const [groepId, setGroepId] = useState(offerings[0]?.id ?? '');
+  const [groepId, setGroepId] = useState(bestaand?.offering_id ?? offerings[0]?.id ?? '');
   const groep = offerings.find((o) => o.id === groepId);
-  const [slots, setSlots] = useState<Slot[]>(groep?.slots ?? []);
-  const [start, setStart] = useState(today);
-  const [aantal, setAantal] = useState(1);
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [slots, setSlots] = useState<Slot[]>(bestaand?.slots ?? groep?.slots ?? []);
+  const [start, setStart] = useState(bestaand?.start_date ?? today);
+  const [aantal, setAantal] = useState(bestaand?.num_spots ?? 1);
+  const [openId, setOpenId] = useState<string | null>(bestaand?.id ?? null);
+  // Wie voor deze plek al een voorstel kreeg, krijgt er niet nog een.
+  const eerder = new Set((bestaand?.offers ?? []).map((o) => o.entry_id));
   const [opengeklapt, setOpengeklapt] = useState<string | null>(null);
   const [toonUitgesloten, setToonUitgesloten] = useState(false);
   const [gedaan, setGedaan] = useState<Gedaan[]>([]);
@@ -54,7 +59,7 @@ export default function PlekMatcher({ org, actor, today, offerings, entries, rul
     });
   }, [groep, slots, start, entries, rules, org.sector, today]);
 
-  const geschikt = ranked.filter((r) => r.eligible && !gedaan.some((g) => g.entryId === r.entryId));
+  const geschikt = ranked.filter((r) => r.eligible && !eerder.has(r.entryId) && !gedaan.some((g) => g.entryId === r.entryId));
   const uitgesloten = ranked.filter((r) => !r.eligible && entries.find((e) => e.id === r.entryId)?.status === 'wachtend');
 
   async function doeVoorstel(c: CandidateResult) {
@@ -108,8 +113,12 @@ export default function PlekMatcher({ org, actor, today, offerings, entries, rul
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-4xl font-extrabold">Plek vrijgekomen</h1>
-      <p className="mt-1 max-w-2xl text-kalk">Vul in welke plek vrij is. De lijst hieronder past zich direct aan, met per persoon de uitleg waarom.</p>
+      <h1 className="text-4xl font-extrabold">{bestaand ? 'Verder met een open plek' : 'Plek vrijgekomen'}</h1>
+      <p className="mt-1 max-w-2xl text-kalk">
+        {bestaand
+          ? `Deze plek staat nog open. ${eerder.size === 1 ? 'Eén eerder voorstel is' : `${eerder.size} eerdere voorstellen zijn`} afgewezen, verlopen of loopt nog; hieronder staat wie daarna aan de beurt is.`
+          : 'Vul in welke plek vrij is. De lijst hieronder past zich direct aan, met per persoon de uitleg waarom.'}
+      </p>
 
       <section className="vlak mt-8 grid gap-5 p-5 sm:grid-cols-3 sm:p-6">
         <div>
@@ -128,7 +137,7 @@ export default function PlekMatcher({ org, actor, today, offerings, entries, rul
         </div>
         <div className="sm:col-span-3">
           {cfg.slotMode === 'dagen' ? (
-            <SlotPicker mode="dagen" value={slots} onChange={setSlots} label="Welke dagen komen vrij?" />
+            <SlotPicker mode="dagen" value={slots} onChange={openId ? () => {} : setSlots} label="Welke dagen komen vrij?" />
           ) : (
             <SlotPicker mode="tijdsloten" value={slots} onChange={setSlots} options={groep?.slots} label="Welk lesmoment komt vrij?" />
           )}

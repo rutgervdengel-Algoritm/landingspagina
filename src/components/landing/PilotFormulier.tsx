@@ -22,7 +22,6 @@ export default function PilotFormulier({ sector: pagina, cta = 'pilot' }: { sect
     if (f.website) return setStatus('klaar'); // honeypot: bots vullen dit veld in
     setStatus('bezig');
     setFout(null);
-    const extra = opvang ? [f.soort && `Soort opvang: ${f.soort}`, f.locaties && `Locaties: ${f.locaties}`].filter(Boolean) : [];
     const { error } = await createClient()
       .from('pilot_aanmeldingen')
       .insert({
@@ -32,8 +31,9 @@ export default function PilotFormulier({ sector: pagina, cta = 'pilot' }: { sect
         email: f.email.trim().toLowerCase(),
         telefoon: f.telefoon.trim() || null,
         wachtlijst: f.wachtlijst || null,
-        // Soort opvang en aantal locaties staan bovenaan het bericht, zodat ze altijd meekomen.
-        bericht: [extra.length ? `[${extra.join(' · ')}]` : '', f.bericht.trim()].filter(Boolean).join('\n') || null,
+        bericht: f.bericht.trim() || null,
+        opvangsoort: opvang ? f.soort || null : null,
+        locaties: opvang ? f.locaties || null : null,
         bron: pagina ?? 'home',
       });
     if (error) {

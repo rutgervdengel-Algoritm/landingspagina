@@ -26,6 +26,8 @@ export default async function Mijn() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login?volgende=/mijn');
 
+  // Voorstellen waarvan de termijn voorbij is eerst laten verlopen, zodat de status klopt.
+  await supabase.rpc('verloop_voorstellen');
   const [{ data: entries }, { data: offers }] = await Promise.all([supabase.rpc('guardian_entries'), supabase.rpc('guardian_offers')]);
   const lijst = (entries ?? []) as GEntry[];
   const voorstellen = (offers ?? []) as GOffer[];
