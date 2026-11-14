@@ -78,7 +78,7 @@ export default async function Mijn() {
 
               <dl className="mt-6 grid grid-cols-2 gap-4 text-sm">
                 <div><dt className="text-kalk">Ingeschreven</dt><dd className="font-bold">{formatDate(e.registered_at)}</dd></div>
-                <div><dt className="text-kalk">Gewenst</dt><dd className="font-bold capitalize">{e.preferred_slots.map(slotText).join(', ') || 'flexibel'}</dd></div>
+                <div><dt className="text-kalk">Gewenst</dt><dd className="font-bold first-letter:uppercase">{e.preferred_slots.map(slotText).join(', ') || 'flexibel'}</dd></div>
                 {e.desired_start_date && <div><dt className="text-kalk">Gewenste start</dt><dd className="font-bold">{formatDate(e.desired_start_date)}</dd></div>}
               </dl>
 

@@ -18,6 +18,13 @@ const STATUS: Record<EntryRow['status'], string> = {
   verlopen: 'Verlopen',
 };
 
+// Kolomnamen zoals de gebruiker ze kent, voor de melding na het plakken.
+const KOLOMNAAM: Record<string, string> = {
+  participant_name: 'naam', participant_birthdate: 'geboortedatum', guardian_name: 'ouder', guardian_email: 'e-mail',
+  guardian_phone: 'telefoon', registered_at: 'inschrijfdatum', groep: 'groep', dagen: 'dagen', broer_zus: 'broer/zus',
+  desired_start_date: 'gewenste startdatum', min_slots: 'minimaal aantal dagen', doorstroom: 'doorstroom', personeel: 'personeel',
+};
+
 interface Props {
   org: OrgRow;
   actor: string;
@@ -206,7 +213,7 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
           </div>
           {preview && (
             <div className="mt-4">
-              {preview.rows.length > 0 && <p className="font-bold">{preview.rows.length} rijen klaar om te importeren. Herkende kolommen: {preview.herkend.join(', ')}.</p>}
+              {preview.rows.length > 0 && <p className="font-bold">{preview.rows.length} rijen klaar om te importeren. Herkende kolommen: {preview.herkend.map((k) => KOLOMNAAM[k] ?? k).join(', ')}.</p>}
               {preview.errors.length > 0 && (
                 <ul className="mt-2 list-inside list-disc text-alarm">
                   {preview.errors.slice(0, 8).map((e) => <li key={e.regel + e.melding}>Regel {e.regel}: {e.melding}</li>)}
@@ -308,7 +315,7 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
                   </td>
                   <td className="px-4 py-3">{groepVan(e.offering_id)?.name ?? '—'}</td>
                   <td className="px-4 py-3 text-sm">
-                    <span className="capitalize">{e.preferred_slots.map(slotText).join(', ') || 'flexibel'}</span>
+                    <span className="block first-letter:uppercase">{e.preferred_slots.map(slotText).join(', ') || 'flexibel'}</span>
                     {e.desired_start_date && <span className="block text-kalk">vanaf {formatDate(e.desired_start_date)}</span>}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-sm">{formatDate(e.registered_at)}</td>

@@ -46,7 +46,7 @@ export default function VoorstelKaart({ voorstel: v }: { voorstel: Voorstel }) {
     <section className="mt-8 rounded-xl border-2 border-inkt bg-white p-6" aria-live="polite">
       <p className="inline-block rounded bg-signaal px-2 py-0.5 text-sm font-bold">Er is een plek voor {v.participant_name}</p>
       <h2 className="mt-3 text-2xl font-extrabold">{v.offering_name}</h2>
-      <p className="mt-1 capitalize">{v.slots.map(slotText).join(', ')}, vanaf {formatDate(v.start_date)}</p>
+      <p className="mt-1 first-letter:uppercase">{v.slots.map(slotText).join(', ')}, vanaf {formatDate(v.start_date)}</p>
       <p className="mt-1 text-sm text-kalk">{v.org_name}. Reageer binnen {dagenOver} {dagenOver === 1 ? 'dag' : 'dagen'}.</p>
 
       {v.breakdown.parts && (

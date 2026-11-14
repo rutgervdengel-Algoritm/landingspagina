@@ -58,7 +58,7 @@ export default async function Overzicht({ searchParams }: { searchParams: { welk
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-bold">{groep?.name ?? 'Groep'}, vanaf {formatDate(p.start_date)}</p>
-                      <p className="text-sm capitalize text-kalk">{p.slots.map(slotText).join(', ')}</p>
+                      <p className="text-sm text-kalk first-letter:uppercase">{p.slots.map(slotText).join(', ')}</p>
                     </div>
                     {vrij > 0 && <Link href={`/beheer/plek?plek=${p.id}`} className="knop-hoofd knop-klein">Volgende voorstellen</Link>}
                   </div>
