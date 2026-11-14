@@ -194,7 +194,7 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
       ],
     },
     vragen: [
-      { v: 'Werkt het naast onze planningssoftware?', a: 'Ja, Eenplekje vervangt je planning of administratie niet. Je zet de wachtlijst erin met een export. Een koppeling met jullie systeem is er nog niet; die onderzoeken we samen als de pilot bevalt.' },
+      { v: 'Werkt het naast onze planningssoftware?', a: 'Ja. Eenplekje vervangt je planning of administratie niet. Je stuurt ons een export van je wachtlijst uit bijvoorbeeld Flexkids, Bitcare, KOVnet of Excel, en wij zetten die erin. Een koppeling is er nog niet; die bouwen we als de pilot bevalt.' },
       { v: 'Wie is verantwoordelijk voor de gegevens?', a: 'Jullie organisatie blijft verwerkingsverantwoordelijke. Eenplekje is verwerker. Dat leggen we vast in een verwerkersovereenkomst voordat er echte gegevens in gaan.' },
       { v: 'Wat gebeurt er met de gegevens als we stoppen?', a: 'Dan verwijderen we alle gegevens van jullie organisatie, inclusief het beslissingslog. Een export voor je eigen archief maken we vooraf samen.' },
     ],
@@ -251,7 +251,7 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
       { v: 'Kunnen dagopvang en BSO in één account?', a: 'Ja. Het zijn groepen binnen dezelfde organisatie, elk met een eigen rij. De voorrangsregels gelden voor de hele organisatie.' },
       { v: 'We halen kinderen op van meerdere scholen. Kan dat?', a: 'Ja. Maak per school of per basisgroep een eigen groep, met eigen dagen en leeftijden. Elke groep heeft een eigen rij.' },
       { v: 'Werkt het ook voor vakantieopvang of flexibele dagen?', a: 'Nog niet. Eenplekje gaat nu over vaste dagen per week. Vakantieopvang en losse dagen pakken we op als pilotdeelnemers daar behoefte aan hebben.' },
-      { v: 'Werkt het naast onze planningssoftware?', a: 'Ja, Eenplekje vervangt je planning of administratie niet. Je zet de wachtlijst erin met een export. Een koppeling met jullie systeem is er nog niet; die onderzoeken we samen als de pilot bevalt.' },
+      { v: 'Werkt het naast onze planningssoftware?', a: 'Ja. Eenplekje vervangt je planning of administratie niet. Je stuurt ons een export van je wachtlijst uit bijvoorbeeld Flexkids, Bitcare, KOVnet of Excel, en wij zetten die erin. Een koppeling is er nog niet; die bouwen we als de pilot bevalt.' },
       { v: 'Wie is verantwoordelijk voor de gegevens?', a: 'Jullie organisatie blijft verwerkingsverantwoordelijke. Eenplekje is verwerker. Dat leggen we vast in een verwerkersovereenkomst voordat er echte gegevens in gaan.' },
     ],
     punten: [

@@ -60,6 +60,10 @@ function OmcirkeldeKop({ tekst }: { tekst: string }) {
   );
 }
 
+// Pakketten waaruit opvangorganisaties een export kunnen aanleveren. Alleen namen, geen logo's:
+// er is geen koppeling of samenwerking met deze leveranciers.
+const PAKKETTEN = ['Flexkids', 'KidsVision', 'Portabase', 'Bitcare', 'KOVnet', 'KindPlanner', 'Jaamo', 'Kidsadmin', 'Proles'];
+
 export default function Landing({ sector: pagina, ontwerp }: { sector: LandingSector; ontwerp?: 'warm' }) {
   const s = LANDING[pagina];
   const sector = s.sector;
@@ -217,18 +221,29 @@ export default function Landing({ sector: pagina, ontwerp }: { sector: LandingSe
                   <p className="mt-2 text-l-zacht">{p.tekst}</p>
                 </div>
               ))}
-              {opvang && (
-                <div className="border-t border-l-lijn pt-5 md:col-span-3 md:grid md:grid-cols-3 md:gap-8">
-                  <h3 className="text-xl font-extrabold">Naast je planningssoftware</h3>
-                  <p className="mt-2 text-l-zacht md:col-span-2 md:mt-0">
-                    Eenplekje vervangt je planning of administratie niet. Je zet de wachtlijst erin met een export uit je huidige systeem of Excel.
-                    Een koppeling met jullie systeem is er nog niet; die onderzoeken we samen als de pilot bevalt.
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </section>
+
+        {/* Naast het huidige pakket */}
+        {opvang && (
+          <section aria-labelledby="pakket" className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-24">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-l-zacht">Geen overstap</p>
+            <h2 id="pakket" className="mt-3 text-3xl font-extrabold sm:text-5xl">Werkt naast het pakket dat je al hebt.</h2>
+            <p className="mx-auto mt-5 max-w-2xl text-lg text-l-zacht">
+              Je planning, contracten en facturen blijven waar ze zijn. Stuur ons een export van je wachtlijst; wij zetten hem erin en jij controleert of de volgorde klopt.
+            </p>
+            <ul className="mt-10 flex flex-wrap justify-center gap-3" aria-label="Pakketten waaruit je een export kunt aanleveren">
+              {PAKKETTEN.map((p) => (
+                <li key={p} className="rounded-full border border-l-lijn bg-white px-5 py-2.5 text-lg font-bold">{p}</li>
+              ))}
+              <li className="rounded-full border-2 border-dashed border-current px-5 py-2.5 text-lg font-bold">Of gewoon Excel</li>
+            </ul>
+            <p className="mx-auto mt-8 max-w-xl text-sm text-l-zacht">
+              Eenplekje heeft geen koppeling met deze pakketten. Je levert een export aan en wij zetten die om. Een koppeling bouwen we als de pilot bevalt.
+            </p>
+          </section>
+        )}
 
         {/* Voor ouders */}
         <section id="ouders" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6 lg:py-24">
