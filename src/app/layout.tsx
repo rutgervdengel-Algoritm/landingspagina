@@ -4,9 +4,9 @@ import Script from 'next/script';
 import { BRAND } from '@/lib/brand';
 
 export const metadata: Metadata = {
-  title: `${BRAND.name}: de eerlijke wachtlijst voor zwemles, sport en kinderopvang`,
+  title: `${BRAND.name}: de wachtlijst voor kinderopvang en BSO die je kunt uitleggen`,
   description:
-    'Ouders zien hun plek in de rij en waarom. Jij ziet bij elke vrije plek direct wie aan de beurt is, met uitleg. Voor zwemscholen, sportclubs en kinderopvang.',
+    'Ouders zien hun plek in de rij en waarom. Jij ziet bij elke vrije plek direct wie aan de beurt is, met uitleg. Voor kinderopvang en BSO, en ook voor zwemscholen en sportclubs.',
   openGraph: {
     title: BRAND.name,
     description: 'De wachtlijst waarop iedereen ziet waar hij staat, en waarom.',

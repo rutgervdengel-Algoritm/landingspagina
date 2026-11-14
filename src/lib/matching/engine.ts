@@ -301,8 +301,10 @@ export function rankCandidates({ sector, opening, entries, rules, today }: RankI
 }
 
 export interface PositionResult {
-  /** 1-based; null als de inschrijving nu niet in aanmerking komt. */
+  /** 1-based; null als de inschrijving niet in aanmerking komt. */
   position: number | null;
+  /** Datum waarop de positie is berekend; later dan vandaag bij een gewenste start in de toekomst. */
+  asOf: string;
   total: number;
   /** Aantal dat vóór staat, per reden (voor de uitleg aan ouders). */
   ahead: { reden: string; aantal: number }[];
@@ -310,10 +312,41 @@ export interface PositionResult {
   candidate: CandidateResult;
 }
 
+const MAAND_NAAM = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+
+export function formatDatum(d: string): string {
+  const x = parseDate(d.slice(0, 10));
+  return `${x.getUTCDate()} ${MAAND_NAAM[x.getUTCMonth()]} ${x.getUTCFullYear()}`;
+}
+
+function addMonths(d: string, months: number): string {
+  const x = parseDate(d.slice(0, 10));
+  x.setUTCMonth(x.getUTCMonth() + months);
+  return x.toISOString().slice(0, 10);
+}
+
+/**
+ * De datum waarop we de positie van een inschrijving berekenen. Normaal
+ * vandaag. Wie pas later wil of kan starten (ingeschreven tijdens de
+ * zwangerschap, of nu nog te jong voor de BSO) krijgt de positie op het
+ * eerste moment dat een plek echt zou passen: de gewenste startdatum, of
+ * de dag waarop het kind de minimumleeftijd van de groep bereikt.
+ */
+export function peildatum(entry: Entry | undefined, offering: Offering, today: string): string {
+  let datum = today;
+  if (!entry) return datum;
+  if (entry.desiredStartDate && entry.desiredStartDate > datum) datum = entry.desiredStartDate.slice(0, 10);
+  if (entry.birthdate && offering.minAgeMonths != null) {
+    const oudGenoeg = addMonths(entry.birthdate, offering.minAgeMonths);
+    if (oudGenoeg > datum) datum = oudGenoeg;
+  }
+  return datum;
+}
+
 /**
  * Positie van één inschrijving in een groep, berekend met precies dezelfde
  * ranking als bij een echte plek: een "standaardplek" met alle vaste
- * momenten van de groep, startend op `today`.
+ * momenten van de groep, startend op de peildatum (zie hierboven).
  */
 export function positionInOffering(params: {
   sector: Sector;
@@ -325,7 +358,9 @@ export function positionInOffering(params: {
 }): PositionResult {
   const { sector, offering, entryId, entries, rules, today } = params;
   const cfg = SECTORS[sector];
-  const opening: Opening = { id: 'standaard', offering, slots: offering.slots, startDate: today };
+  const asOf = peildatum(entries.find((e) => e.id === entryId), offering, today);
+  const later = asOf > today;
+  const opening: Opening = { id: 'standaard', offering, slots: offering.slots, startDate: asOf };
   const ranked = rankCandidates({ sector, opening, entries, rules, today });
   const eligible = ranked.filter((r) => r.eligible);
   const me = ranked.find((r) => r.entryId === entryId);
@@ -334,9 +369,10 @@ export function positionInOffering(params: {
   if (!me.eligible) {
     return {
       position: null,
+      asOf,
       total: eligible.length,
       ahead: [],
-      explanation: `Op dit moment nog niet in aanmerking voor ${offering.name}: ${me.exclusions.map((e) => e.explanation).join('; ')}`,
+      explanation: `${later ? `Per ${formatDatum(asOf)}` : 'Op dit moment'} niet in aanmerking voor ${offering.name}: ${me.exclusions.map((e) => e.explanation).join('; ')}`,
       candidate: me,
     };
   }
@@ -352,12 +388,15 @@ export function positionInOffering(params: {
   const p = cfg.participant;
   return {
     position: idx + 1,
+    asOf,
     total: eligible.length,
     ahead,
     explanation:
       idx === 0
-        ? `Komt er nu een plek vrij in ${offering.name}, dan ben jij als eerste aan de beurt.`
-        : `Bij een plek in ${offering.name} ${idx === 1 ? 'staat 1 ' + p.enkelvoud : `staan ${idx} ${p.meervoud}`} voor je.`,
+        ? later
+          ? `Komt er een plek vrij in ${offering.name} vanaf ${formatDatum(asOf)}, dan ben jij als eerste aan de beurt.`
+          : `Komt er nu een plek vrij in ${offering.name}, dan ben jij als eerste aan de beurt.`
+        : `Bij een plek in ${offering.name}${later ? ` vanaf ${formatDatum(asOf)}` : ''} ${idx === 1 ? 'staat 1 ' + p.enkelvoud : `staan ${idx} ${p.meervoud}`} voor je.`,
     candidate: me,
   };
 }

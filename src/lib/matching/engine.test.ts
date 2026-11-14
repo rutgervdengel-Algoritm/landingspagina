@@ -141,3 +141,44 @@ describe('positie voor ouders', () => {
     expect(laatste.explanation).toBe('Bij een plek in Judo 6-8 staan 2 sporters voor je.');
   });
 });
+
+describe('positie voor wie later start (opvang en BSO)', () => {
+  const regels = [wachttijd];
+
+  it('geeft een ongeboren kind een positie op de gewenste startdatum', () => {
+    const babygroep: Offering = { id: 'g', name: 'Babygroep', minAgeMonths: 0, maxAgeMonths: 23, slots: [{ dag: 'ma' }] };
+    const pos = positionInOffering({
+      sector: 'kinderopvang', offering: babygroep, entryId: 'verwacht', rules: regels, today: TODAY,
+      entries: [
+        entry({ id: 'verwacht', birthdate: '2027-02-01', desiredStartDate: '2027-06-01', preferredSlots: [{ dag: 'ma' }], registeredAt: '2026-08-01T00:00:00Z' }),
+        // Staat er nu, maar is op 1 juni 2027 te oud voor de babygroep.
+        entry({ id: 'bijnapeuter', birthdate: '2025-03-01', preferredSlots: [{ dag: 'ma' }], registeredAt: '2025-06-01T00:00:00Z' }),
+        entry({ id: 'baby', birthdate: '2026-09-01', preferredSlots: [{ dag: 'ma' }], registeredAt: '2026-05-01T00:00:00Z' }),
+      ],
+    });
+    expect(pos.asOf).toBe('2027-06-01');
+    expect(pos.position).toBe(2);
+    expect(pos.total).toBe(2);
+    expect(pos.explanation).toContain('vanaf 1 juni 2027');
+  });
+
+  it('geeft een driejarige een positie voor de BSO vanaf de vierde verjaardag', () => {
+    const bso: Offering = { id: 'b', name: 'BSO', minAgeMonths: 48, maxAgeMonths: 155, slots: [{ dag: 'di' }] };
+    const pos = positionInOffering({
+      sector: 'kinderopvang', offering: bso, entryId: 'drie', rules: regels, today: TODAY,
+      entries: [entry({ id: 'drie', birthdate: '2023-04-10', preferredSlots: [{ dag: 'di' }] })],
+    });
+    expect(pos.asOf).toBe('2027-04-10');
+    expect(pos.position).toBe(1);
+  });
+
+  it('rekent met vandaag als er niets in de toekomst ligt', () => {
+    const bso: Offering = { id: 'b', name: 'BSO', minAgeMonths: 48, maxAgeMonths: 155, slots: [{ dag: 'di' }] };
+    const pos = positionInOffering({
+      sector: 'kinderopvang', offering: bso, entryId: 'zes', rules: regels, today: TODAY,
+      entries: [entry({ id: 'zes', birthdate: '2020-05-01', desiredStartDate: '2026-09-01', preferredSlots: [{ dag: 'di' }] })],
+    });
+    expect(pos.asOf).toBe(TODAY);
+    expect(pos.explanation).toContain('Komt er nu een plek vrij');
+  });
+});

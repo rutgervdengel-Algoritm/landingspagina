@@ -15,8 +15,8 @@ function kleineBeginletter(t: string) {
   return t.charAt(0).toLowerCase() + t.slice(1);
 }
 
-export default function RijDemo({ sector }: { sector: LandingSector }) {
-  const { demo } = LANDING[sector];
+export default function RijDemo({ sector: pagina }: { sector: LandingSector }) {
+  const { demo, sector } = LANDING[pagina];
   const cfg = SECTORS[sector];
   const start = useMemo(() => Object.fromEntries(demo.rules.map((r) => [r.id, r.weight])), [demo.rules]);
   const [gewicht, setGewicht] = useState<Record<string, number>>(start);
@@ -32,7 +32,7 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
         .filter((c) => c.eligible)
         .map((c) => c.entryId),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [sector],
+    [pagina],
   );
   const rij = rankCandidates({ sector, opening, entries: demo.entries, rules: regels, today: DEMO_TODAY });
   const past = rij.filter((c) => c.eligible);
@@ -57,13 +57,13 @@ export default function RijDemo({ sector }: { sector: LandingSector }) {
             {demo.rules.map((r) => (
               <div key={r.id}>
                 <div className="flex items-baseline justify-between gap-4">
-                  <label htmlFor={`regel-${sector}-${r.id}`} className="font-bold">{r.label}</label>
+                  <label htmlFor={`regel-${pagina}-${r.id}`} className="font-bold">{r.label}</label>
                   <span className="shrink-0 text-sm tabular-nums text-l-zacht">
                     {gewicht[r.id] === 0 ? 'telt niet mee' : `${Math.round((gewicht[r.id] / totaal) * 100)}%`}
                   </span>
                 </div>
                 <input
-                  id={`regel-${sector}-${r.id}`}
+                  id={`regel-${pagina}-${r.id}`}
                   type="range"
                   min={0}
                   max={100}

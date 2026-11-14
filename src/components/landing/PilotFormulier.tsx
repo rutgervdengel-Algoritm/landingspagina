@@ -2,10 +2,18 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import type { LandingSector } from './content';
+import { LANDING, type LandingSector } from './content';
 
-export default function PilotFormulier({ sector }: { sector: LandingSector | null }) {
-  const [f, setF] = useState({ naam: '', organisatie: '', branche: sector ?? '', email: '', telefoon: '', wachtlijst: '', bericht: '', website: '' });
+const SOORT = ['Dagopvang', 'BSO', 'Dagopvang en BSO', 'Peuteropvang', 'Anders'];
+const LOCATIES = ['1', '2 tot 5', '6 tot 20', 'Meer dan 20'];
+
+export default function PilotFormulier({ sector: pagina, cta = 'pilot' }: { sector: LandingSector | null; cta?: 'pilot' | 'demo' }) {
+  const branche = pagina ? LANDING[pagina].sector : '';
+  const opvang = branche === 'kinderopvang';
+  const [f, setF] = useState({
+    naam: '', organisatie: '', branche: branche as string, email: '', telefoon: '', wachtlijst: '', bericht: '', website: '',
+    soort: pagina === 'bso' ? 'BSO' : '', locaties: '',
+  });
   const [status, setStatus] = useState<'invoer' | 'bezig' | 'klaar'>('invoer');
   const [fout, setFout] = useState<string | null>(null);
 
@@ -14,6 +22,7 @@ export default function PilotFormulier({ sector }: { sector: LandingSector | nul
     if (f.website) return setStatus('klaar'); // honeypot: bots vullen dit veld in
     setStatus('bezig');
     setFout(null);
+    const extra = opvang ? [f.soort && `Soort opvang: ${f.soort}`, f.locaties && `Locaties: ${f.locaties}`].filter(Boolean) : [];
     const { error } = await createClient()
       .from('pilot_aanmeldingen')
       .insert({
@@ -23,12 +32,18 @@ export default function PilotFormulier({ sector }: { sector: LandingSector | nul
         email: f.email.trim().toLowerCase(),
         telefoon: f.telefoon.trim() || null,
         wachtlijst: f.wachtlijst || null,
-        bericht: f.bericht.trim() || null,
-        bron: sector ?? 'home',
+        // Soort opvang en aantal locaties staan bovenaan het bericht, zodat ze altijd meekomen.
+        bericht: [extra.length ? `[${extra.join(' · ')}]` : '', f.bericht.trim()].filter(Boolean).join('\n') || null,
+        bron: pagina ?? 'home',
       });
     if (error) {
       setStatus('invoer');
-      setFout('Versturen lukte niet. Controleer je e-mailadres en probeer het opnieuw.');
+      // 23514 = een controle in de database (bijvoorbeeld een ongeldig e-mailadres).
+      setFout(
+        error.code === '23514'
+          ? 'Versturen lukte niet. Controleer je e-mailadres en probeer het opnieuw.'
+          : 'Versturen lukte niet, en dat ligt aan ons. Je gegevens staan er nog; probeer het over een paar minuten opnieuw.',
+      );
       return;
     }
     setStatus('klaar');
@@ -38,7 +53,7 @@ export default function PilotFormulier({ sector }: { sector: LandingSector | nul
     return (
       <div className="l-vlak p-6 sm:p-8" role="status">
         <h3 className="text-2xl font-extrabold">Bedankt, {f.naam.split(' ')[0] || 'we hebben je aanmelding'}.</h3>
-        <p className="mt-2 text-l-zacht">We nemen binnen een paar werkdagen contact met je op om kennis te maken en te kijken of de pilot bij jullie past.</p>
+        <p className="mt-2 text-l-zacht">We nemen binnen een paar werkdagen contact met je op om {cta === 'demo' ? 'een demo te plannen' : 'kennis te maken'} en te kijken of de pilot bij jullie past.</p>
       </div>
     );
   }
@@ -61,18 +76,37 @@ export default function PilotFormulier({ sector }: { sector: LandingSector | nul
         <label className="label" htmlFor="p-tel">Telefoon <span className="font-normal text-kalk">(niet verplicht)</span></label>
         <input id="p-tel" type="tel" maxLength={40} autoComplete="tel" className="veld" value={f.telefoon} onChange={(e) => setF({ ...f, telefoon: e.target.value })} />
       </div>
-      <div>
-        <label className="label" htmlFor="p-branche">Branche</label>
-        <select id="p-branche" required className="veld" value={f.branche} onChange={(e) => setF({ ...f, branche: e.target.value })}>
-          <option value="" disabled>Kies</option>
-          <option value="zwemles">Zwemles</option>
-          <option value="sport">Sport</option>
-          <option value="kinderopvang">Kinderopvang</option>
-          <option value="overig">Iets anders</option>
-        </select>
-      </div>
-      <div>
-        <label className="label" htmlFor="p-lijst">Hoeveel mensen staan er op je wachtlijst?</label>
+      {opvang ? (
+        <>
+          <div>
+            <label className="label" htmlFor="p-soort">Soort opvang</label>
+            <select id="p-soort" required className="veld" value={f.soort} onChange={(e) => setF({ ...f, soort: e.target.value })}>
+              <option value="" disabled>Kies</option>
+              {SOORT.map((o) => <option key={o}>{o}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="label" htmlFor="p-loc">Aantal locaties</label>
+            <select id="p-loc" className="veld" value={f.locaties} onChange={(e) => setF({ ...f, locaties: e.target.value })}>
+              <option value="">Kies</option>
+              {LOCATIES.map((o) => <option key={o}>{o}</option>)}
+            </select>
+          </div>
+        </>
+      ) : (
+        <div>
+          <label className="label" htmlFor="p-branche">Branche</label>
+          <select id="p-branche" required className="veld" value={f.branche} onChange={(e) => setF({ ...f, branche: e.target.value })}>
+            <option value="" disabled>Kies</option>
+            <option value="kinderopvang">Kinderopvang of BSO</option>
+            <option value="zwemles">Zwemles</option>
+            <option value="sport">Sport</option>
+            <option value="overig">Iets anders</option>
+          </select>
+        </div>
+      )}
+      <div className={opvang ? 'sm:col-span-2' : ''}>
+        <label className="label" htmlFor="p-lijst">{opvang ? 'Hoeveel kinderen staan er op je wachtlijst?' : 'Hoeveel mensen staan er op je wachtlijst?'}</label>
         <select id="p-lijst" className="veld" value={f.wachtlijst} onChange={(e) => setF({ ...f, wachtlijst: e.target.value })}>
           <option value="">Weet ik niet precies</option>
           <option value="<25">Minder dan 25</option>
@@ -91,8 +125,8 @@ export default function PilotFormulier({ sector }: { sector: LandingSector | nul
       </div>
       {fout && <p className="rounded-md bg-alarm-licht px-3 py-2 text-sm text-alarm sm:col-span-2" role="alert">{fout}</p>}
       <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
-        <button className="l-knop-sterk text-lg disabled:opacity-50" disabled={status === 'bezig'}>{status === 'bezig' ? 'Bezig met versturen…' : 'Aanmelden voor de pilot'}</button>
-        <p className="text-sm text-l-zacht">We gebruiken je gegevens alleen om contact met je op te nemen over de pilot.</p>
+        <button className="l-knop-sterk text-lg disabled:opacity-50" disabled={status === 'bezig'}>{status === 'bezig' ? 'Bezig met versturen…' : cta === 'demo' ? 'Demo aanvragen' : 'Aanmelden voor de pilot'}</button>
+        <p className="text-sm text-l-zacht">We gebruiken je gegevens alleen om contact met je op te nemen over Eenplekje.</p>
       </div>
     </form>
   );

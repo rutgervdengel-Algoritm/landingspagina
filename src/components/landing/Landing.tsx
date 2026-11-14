@@ -7,7 +7,7 @@ import RijDemo from './RijDemo';
 import AppVenster from './AppVenster';
 import { Lock, MapPin, Smartphone } from 'lucide-react';
 import PilotFormulier from './PilotFormulier';
-import { DEMO_TODAY, FAQ, LANDING, type LandingSector } from './content';
+import { DEMO_TODAY, FAQ, LANDING, VOLGORDE, type LandingSector } from './content';
 
 /** Golfrand voor zwemles: de enige decoratie op die pagina. */
 function Golf({ boven, onder }: { boven: string; onder: string }) {
@@ -60,8 +60,9 @@ function OmcirkeldeKop({ tekst }: { tekst: string }) {
   );
 }
 
-export default function Landing({ sector, ontwerp }: { sector: LandingSector; ontwerp?: 'warm' }) {
-  const s = LANDING[sector];
+export default function Landing({ sector: pagina, ontwerp }: { sector: LandingSector; ontwerp?: 'warm' }) {
+  const s = LANDING[pagina];
+  const sector = s.sector;
   const warm = ontwerp === 'warm';
   const opvang = sector === 'kinderopvang';
   const sport = sector === 'sport';
@@ -138,7 +139,7 @@ export default function Landing({ sector, ontwerp }: { sector: LandingSector; on
             </div>
             {warm ? (
               <div className="mx-auto w-full max-w-md min-w-0 lg:mr-0">
-                <AppVenster sector={sector} />
+                <AppVenster sector={pagina} />
               </div>
             ) : (
             <div className="min-w-0">
@@ -178,7 +179,7 @@ export default function Landing({ sector, ontwerp }: { sector: LandingSector; on
               Wat je hier instelt, is precies wat ouders als uitleg zien.
             </p>
             <div className="mt-8">
-              <RijDemo sector={sector} />
+              <RijDemo sector={pagina} />
             </div>
           </div>
         </section>
@@ -273,7 +274,8 @@ export default function Landing({ sector, ontwerp }: { sector: LandingSector; on
         <section id="pilot" className="scroll-mt-20 bg-l-zacht2">
           <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:py-24">
             <div>
-              <h2 className={`font-extrabold ${sport ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'}`}>{opvang ? 'Een begeleide pilot' : 'Doe mee met de pilot'}</h2>
+              <h2 className={`font-extrabold ${sport ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'}`}>{warm ? 'Vraag een demo aan' : opvang ? 'Een begeleide pilot' : 'Doe mee met de pilot'}</h2>
+              {warm && <p className="mt-4 font-bold">We laten je zien hoe het werkt en kijken samen of een begeleide pilot bij jullie past.</p>}
               <p className="mt-4 text-l-zacht">{s.pilot.intro}</p>
               {opvang ? (
                 <ol className="mt-6 grid gap-4">
@@ -295,7 +297,7 @@ export default function Landing({ sector, ontwerp }: { sector: LandingSector; on
                 </ul>
               )}
             </div>
-            <PilotFormulier sector={sector} />
+            <PilotFormulier sector={pagina} cta={warm ? 'demo' : 'pilot'} />
           </div>
         </section>
 
@@ -320,7 +322,7 @@ export default function Landing({ sector, ontwerp }: { sector: LandingSector; on
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-l-zacht sm:px-6">
           <Logo className="text-l-tekst" />
           <nav aria-label="Voettekst" className="flex flex-wrap gap-x-5 gap-y-2">
-            {(Object.keys(LANDING) as LandingSector[]).filter((k) => k !== sector).map((k) => (
+            {VOLGORDE.filter((k) => k !== pagina).map((k) => (
               <Link key={k} href={LANDING[k].pad} className="hover:text-l-tekst">Eenplekje voor {LANDING[k].voor}</Link>
             ))}
             <Link href="/login" className="hover:text-l-tekst">Inloggen</Link>

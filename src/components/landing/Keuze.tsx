@@ -2,10 +2,14 @@ import Link from 'next/link';
 import Logo from './Logo';
 import { LANDING, type LandingSector } from './content';
 
+const OPVANG: LandingSector[] = ['kinderopvang', 'bso'];
+const OOK: LandingSector[] = ['zwemles', 'sport'];
+
 const KAART_KLEUR: Record<LandingSector, { bg: string; tekst: string; accent: string }> = {
   zwemles: { bg: '#E3F5F9', tekst: '#08344F', accent: '#57D3E8' },
   sport: { bg: '#E8F0E6', tekst: '#10281C', accent: '#FF7A33' },
   kinderopvang: { bg: '#F0EADF', tekst: '#2D5A4A', accent: '#C67B4B' },
+  bso: { bg: '#D5EDEA', tekst: '#264D3F', accent: '#B56A3B' },
 };
 
 /** Startpagina: kies je branche. Elke branche heeft een eigen pagina met eigen toon. */
@@ -19,10 +23,10 @@ export default function Keuze() {
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-16">
         <h1 className="max-w-3xl text-[clamp(2.4rem,6.5vw,4.25rem)] font-extrabold leading-[1.02]">Iedereen op de wachtlijst ziet waar hij staat.</h1>
         <p className="mt-6 max-w-2xl text-lg text-l-zacht sm:text-xl">
-          Eenplekje is een wachtlijst waarop ouders hun plek in de rij zien, met uitleg. Organisaties zien bij elke vrije plek direct wie aan de beurt is. Voor wie is het?
+          Eenplekje is een wachtlijst waarop ouders hun plek in de rij zien, met uitleg. Organisaties zien bij elke vrije plek direct wie aan de beurt is, volgens hun eigen plaatsingsbeleid.
         </p>
-        <ul className="mt-10 grid gap-4 md:grid-cols-3">
-          {(Object.keys(LANDING) as LandingSector[]).map((k) => {
+        <ul className="mt-10 grid gap-4 md:grid-cols-2">
+          {OPVANG.map((k) => {
             const c = KAART_KLEUR[k];
             return (
               <li key={k}>
@@ -40,7 +44,25 @@ export default function Keuze() {
             );
           })}
         </ul>
-        <p className="mt-10 max-w-xl text-sm text-l-zacht">Eenplekje is nieuw. We zoeken per branche drie organisaties voor een pilot zonder kosten.</p>
+        <p className="mt-6 max-w-xl text-sm text-l-zacht">Eenplekje is nieuw. We beginnen met kinderopvang en BSO en zoeken drie organisaties voor een pilot zonder kosten.</p>
+
+        <h2 className="mt-14 text-xl font-extrabold">Ook voor</h2>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          {OOK.map((k) => {
+            const c = KAART_KLEUR[k];
+            return (
+              <li key={k}>
+                <Link href={LANDING[k].pad} className="flex h-full items-center gap-4 rounded-xl p-4 sm:p-5" style={{ background: c.bg, color: c.tekst }}>
+                  <span className="block h-10 w-1.5 shrink-0 rounded-full" style={{ background: c.accent }} aria-hidden />
+                  <span>
+                    <span className="block text-lg font-extrabold">{LANDING[k].naam}</span>
+                    <span className="block text-sm opacity-80">Voor {LANDING[k].voor}</span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </main>
     </div>
   );

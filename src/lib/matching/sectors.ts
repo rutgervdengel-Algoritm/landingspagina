@@ -21,7 +21,7 @@ export interface SectorConfig {
 
 export const SECTORS: Record<Sector, SectorConfig> = {
   kinderopvang: {
-    label: 'Kinderopvang',
+    label: 'Kinderopvang en BSO',
     participant: { enkelvoud: 'kind', meervoud: 'kinderen' },
     guardian: 'ouder',
     offering: { enkelvoud: 'groep', meervoud: 'groepen' },
@@ -31,10 +31,13 @@ export const SECTORS: Record<Sector, SectorConfig> = {
     defaultRules: [
       { type: 'wachttijd', label: 'Inschrijfdatum', weight: 50, active: true },
       { type: 'kenmerk', label: 'Broertje of zusje op de locatie', factorKey: 'broer_zus', weight: 30, active: true },
+      // Voor de BSO: kinderen die al bij de eigen dagopvang of peuteropvang zitten.
+      { type: 'kenmerk', label: 'Stroomt door vanuit onze eigen opvang', factorKey: 'doorstroom', weight: 20, active: false },
       { type: 'kenmerk', label: 'Kind van medewerker', factorKey: 'personeel', weight: 20, active: false },
     ],
     factors: [
       { key: 'broer_zus', label: 'Broertje of zusje op de locatie' },
+      { key: 'doorstroom', label: 'Stroomt door vanuit onze eigen opvang' },
       { key: 'personeel', label: 'Kind van medewerker' },
     ],
   },

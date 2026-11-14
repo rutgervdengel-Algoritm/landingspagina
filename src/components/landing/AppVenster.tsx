@@ -6,8 +6,8 @@ import { DEMO_TODAY, LANDING, type LandingSector } from './content';
  * Een echt beeld van het scherm "Plek vrijgekomen", in een browservenster.
  * Berekend met dezelfde rekenregel als de app, met verzonnen namen.
  */
-export default function AppVenster({ sector }: { sector: LandingSector }) {
-  const { demo } = LANDING[sector];
+export default function AppVenster({ sector: pagina }: { sector: LandingSector }) {
+  const { demo, sector } = LANDING[pagina];
   const opening = { id: 'venster', offering: demo.offering, slots: demo.offering.slots, startDate: DEMO_TODAY };
   const rij = rankCandidates({ sector, opening, entries: demo.entries, rules: demo.rules, today: DEMO_TODAY }).filter((c) => c.eligible);
   const eerste = rij[0];

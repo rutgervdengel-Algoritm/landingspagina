@@ -46,3 +46,16 @@ Alle drie staan live op project `wachtlijst-pilot` (eu-central-1).
 4. Landingspagina per branche, zonder onware claims, met pilotformulier en analytics.
 5. Medewerkers uitnodigen (nu: één eigenaar per organisatie).
 6. Verwerkersovereenkomst en privacyverklaring.
+
+## Focus opvang en BSO (14 november 2026)
+
+- `/bso`: eigen landingspagina; rekent als branche `kinderopvang` (`LANDING.bso.sector`).
+- Positie voor ouders wordt berekend op de peildatum: de gewenste startdatum of de dag waarop
+  het kind de minimumleeftijd van de groep bereikt, als die later is dan vandaag (`peildatum` in de engine).
+- Inrichten: snelle keuze Babygroep, Peutergroep, Verticale groep, BSO; voorrangsregel
+  "Stroomt door vanuit onze eigen opvang" (kenmerk `doorstroom`, staat aan bij BSO).
+- Pilotformulier: soort opvang en aantal locaties staan tussen haken bovenaan `bericht`
+  (geen schemawijziging nodig); `bron` is de pagina (`bso`, `kinderopvang`, ...).
+
+Open: database staat op pauze (gratis plan), site is niet openbaar (Vercel-beveiliging, geen domein),
+geen melding bij een nieuwe aanmelding, voorstel verloopt pas als de ouder het opent.

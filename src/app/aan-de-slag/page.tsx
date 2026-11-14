@@ -10,11 +10,19 @@ import { BRAND } from '@/lib/brand';
 import { totMaanden, vanafMaanden } from '@/lib/leeftijd';
 
 const VOORBEELD: Record<Sector, { groep: string; van: number; tot: number; niveau?: string; slots: Slot[] }> = {
-  kinderopvang: { groep: 'Babygroep', van: 0, tot: 1.5, slots: [{ dag: 'ma' }, { dag: 'di' }, { dag: 'do' }] },
+  kinderopvang: { groep: 'Babygroep', van: 0, tot: 1, slots: [{ dag: 'ma' }, { dag: 'di' }, { dag: 'do' }] },
   zwemles: { groep: 'Zwemles A, woensdag', van: 4, tot: 12, niveau: 'A', slots: [{ dag: 'wo', van: '15:00', tot: '15:45' }] },
   sport: { groep: 'Judo 6–8 jaar', van: 6, tot: 8, slots: [{ dag: 'za', van: '09:00', tot: '10:00' }] },
   overig: { groep: 'Groep 1', van: 0, tot: 18, slots: [{ dag: 'wo', van: '16:00', tot: '17:00' }] },
 };
+
+// Snelle keuze voor de eerste groep bij opvang: de vier groepen die het meest voorkomen.
+const OPVANG_GROEPEN: { groep: string; van: number; tot: number; slots: Slot[] }[] = [
+  { groep: 'Babygroep', van: 0, tot: 1, slots: [{ dag: 'ma' }, { dag: 'di' }, { dag: 'do' }] },
+  { groep: 'Peutergroep', van: 2, tot: 3, slots: [{ dag: 'ma' }, { dag: 'di' }, { dag: 'do' }] },
+  { groep: 'Verticale groep', van: 0, tot: 3, slots: [{ dag: 'ma' }, { dag: 'di' }, { dag: 'wo' }, { dag: 'do' }, { dag: 'vr' }] },
+  { groep: 'BSO', van: 4, tot: 12, slots: [{ dag: 'ma' }, { dag: 'di' }, { dag: 'do' }] },
+];
 
 const STAPPEN = ['Branche', 'Organisatie', 'Eerste groep', 'Voorrang'];
 
@@ -115,7 +123,7 @@ export default function AanDeSlag() {
                 <button key={s} type="button" onClick={() => kiesSector(s)} className="vlak p-5 text-left hover:border-inkt">
                   <span className="font-display text-xl font-extrabold">{SECTORS[s].label}</span>
                   <span className="mt-1 block text-sm text-kalk">
-                    {SECTORS[s].slotMode === 'dagen' ? 'Plaatsing per dag' : 'Plaatsing per lesmoment'}
+                    {s === 'kinderopvang' ? 'Dagopvang, peuteropvang en BSO. Plaatsing per dag' : SECTORS[s].slotMode === 'dagen' ? 'Plaatsing per dag' : 'Plaatsing per lesmoment'}
                     {SECTORS[s].usesLevel ? ', met niveaus' : ''}
                   </span>
                 </button>
@@ -155,6 +163,32 @@ export default function AanDeSlag() {
           <section className="mt-10">
             <h1 className="text-4xl font-extrabold">Je eerste {cfg.offering.enkelvoud}</h1>
             <p className="mt-3 text-kalk">Waar wachten mensen op? Meer {cfg.offering.meervoud} voeg je later toe.</p>
+            {sector === 'kinderopvang' && (
+              <div className="mt-6">
+                <p className="label">Begin met</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {OPVANG_GROEPEN.map((g) => {
+                    const actief = groep.naam === g.groep;
+                    return (
+                      <button
+                        key={g.groep}
+                        type="button"
+                        aria-pressed={actief}
+                        onClick={() => {
+                          setGroep({ naam: g.groep, van: String(g.van), tot: String(g.tot), niveau: '', slots: g.slots });
+                          // Bij de BSO is doorstroom vanuit de eigen opvang meestal een voorrangsregel.
+                          setRegels((rs) => rs.map((r) => (r.factorKey === 'doorstroom' ? { ...r, active: g.groep === 'BSO' } : r)));
+                        }}
+                        className={`rounded-full border px-4 py-2 font-bold ${actief ? 'border-inkt bg-inkt text-papier' : 'border-kalk-licht hover:border-inkt'}`}
+                      >
+                        {g.groep}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="hulp">Je kunt de naam, leeftijd en dagen hieronder aanpassen. Dagopvang en BSO kunnen naast elkaar in één account.</p>
+              </div>
+            )}
             <div className="mt-8 grid gap-5">
               <div>
                 <label className="label" htmlFor="gnaam">Naam</label>
