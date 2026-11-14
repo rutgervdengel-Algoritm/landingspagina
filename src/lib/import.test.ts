@@ -20,6 +20,18 @@ describe('import uit Excel', () => {
     expect(r.rows[1].registered_at).toBeNull();
   });
 
+  it('neemt startdatum, minimum dagen en voorrang voor opvang over', () => {
+    const r = parseImport(
+      'Kind;E-mail;Verwachte geboortedatum;Gewenste startdatum;Dagen;Minimaal;Doorstroom;Personeel\n' +
+        'Baby Jansen;a@x.nl;1-2-2027;1-6-2027;ma di do;2;nee;x\n' +
+        'Mila Bos;b@x.nl;10-4-2023;;di;3;ja;',
+    );
+    expect(r.errors).toEqual([]);
+    expect(r.rows[0]).toMatchObject({ participant_birthdate: '2027-02-01', desired_start_date: '2027-06-01', min_slots: 2, doorstroom: false, personeel: true });
+    expect(r.rows[1]).toMatchObject({ desired_start_date: null, min_slots: null, doorstroom: true });
+    expect(parseImport('naam;email;startdatum\nA;a@x.nl;morgen').errors[0].melding).toMatch(/Startdatum/);
+  });
+
   it('meldt fouten per regel in plaats van stil over te slaan', () => {
     const r = parseImport('naam;email;geboortedatum\nNoor;geen-mail;1-1-2020\nFinn;f@x.nl;31-31-2020');
     expect(r.rows).toHaveLength(0);

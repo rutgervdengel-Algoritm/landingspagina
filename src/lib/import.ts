@@ -15,6 +15,10 @@ export interface ImportRow {
   groep: string | null;
   dagen: Slot[];
   broer_zus: boolean;
+  desired_start_date: string | null;
+  min_slots: number | null;
+  doorstroom: boolean;
+  personeel: boolean;
 }
 
 export interface ImportResult {
@@ -23,9 +27,9 @@ export interface ImportResult {
   herkend: string[];
 }
 
-const KOLOMMEN: Record<keyof Omit<ImportRow, 'dagen' | 'broer_zus'> | 'dagen' | 'broer_zus', string[]> = {
+const KOLOMMEN: Record<keyof ImportRow, string[]> = {
   participant_name: ['kind', 'naam kind', 'naam', 'deelnemer', 'zwemmer', 'leerling', 'voornaam kind'],
-  participant_birthdate: ['geboortedatum', 'geb datum', 'geb. datum', 'geboren'],
+  participant_birthdate: ['geboortedatum', 'geb datum', 'geb. datum', 'geboren', 'verwachte geboortedatum', 'uitgerekende datum'],
   guardian_name: ['ouder', 'naam ouder', 'verzorger', 'contactpersoon', 'ouder/verzorger'],
   guardian_email: ['email', 'e-mail', 'emailadres', 'e-mailadres', 'mail'],
   guardian_phone: ['telefoon', 'tel', 'mobiel', 'telefoonnummer'],
@@ -33,7 +37,13 @@ const KOLOMMEN: Record<keyof Omit<ImportRow, 'dagen' | 'broer_zus'> | 'dagen' | 
   groep: ['groep', 'les', 'lesgroep', 'klas', 'aanbod'],
   dagen: ['dagen', 'gewenste dagen', 'voorkeur', 'dag'],
   broer_zus: ['broer/zus', 'broertje/zusje', 'broer zus', 'sibling'],
+  desired_start_date: ['startdatum', 'gewenste startdatum', 'gewenste start', 'ingangsdatum', 'plaatsingsdatum', 'gewenste plaatsingsdatum', 'gewenste ingangsdatum'],
+  min_slots: ['minimaal', 'min dagen', 'minimaal aantal dagen', 'minimum dagen'],
+  doorstroom: ['doorstroom', 'intern', 'eigen opvang', 'interne doorstroom'],
+  personeel: ['personeel', 'medewerker', 'kind van medewerker'],
 };
+
+const JA = ['ja', 'j', 'x', '1', 'true', 'yes'];
 
 const DAGMAP: Record<string, Dag> = {
   ma: 'ma', maandag: 'ma', di: 'di', dinsdag: 'di', wo: 'wo', woensdag: 'wo', do: 'do', donderdag: 'do',
@@ -109,6 +119,10 @@ export function parseImport(text: string): ImportResult {
       .map((d) => DAGMAP[d])
       .filter(Boolean)
       .map((dag) => ({ dag }));
+    const startRaw = get('desired_start_date');
+    const startdatum = parseDatum(startRaw);
+    if (startRaw && !startdatum) return errors.push({ regel, melding: `Startdatum "${startRaw}" niet herkend` });
+    const min = parseInt(get('min_slots'), 10);
     const bz = get('broer_zus').toLowerCase();
     rows.push({
       participant_name: naam,
@@ -119,7 +133,12 @@ export function parseImport(text: string): ImportResult {
       registered_at: ins ? `${ins}T12:00:00Z` : null,
       groep: get('groep') || null,
       dagen,
-      broer_zus: ['ja', 'j', 'x', '1', 'true', 'yes'].includes(bz),
+      broer_zus: JA.includes(bz),
+      desired_start_date: startdatum,
+      // Alleen zinvol als het minder is dan het aantal gewenste dagen.
+      min_slots: min >= 1 && min < dagen.length ? min : null,
+      doorstroom: JA.includes(get('doorstroom').toLowerCase()),
+      personeel: JA.includes(get('personeel').toLowerCase()),
     });
   });
   return { rows, errors, herkend };

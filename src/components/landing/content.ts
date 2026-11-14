@@ -87,7 +87,7 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
     },
     vragen: [
       { v: 'Werkt het met meerdere baden of locaties?', a: 'De basis ondersteunt meerdere locaties. Tijdens de pilot richten we die samen in.' },
-      { v: 'Wat als een kind tussentijds een niveau omhoog gaat?', a: 'Dan pas je het niveau aan en telt het kind mee voor groepen op dat niveau. Inschrijvingen aanpassen in het scherm bouwen we tijdens de pilot verder uit.' },
+      { v: 'Wat als een kind tussentijds een niveau omhoog gaat?', a: 'Dan pas je het niveau aan bij de inschrijving en telt het kind mee voor groepen op dat niveau. De wijziging staat in het log.' },
     ],
     intro:
       'Met de reden erbij, zodat ze niet meer hoeven te bellen. Jij ziet bij elk vrij lesmoment direct wie aan de beurt is, op niveau, leeftijd en jouw voorrangsregels.',

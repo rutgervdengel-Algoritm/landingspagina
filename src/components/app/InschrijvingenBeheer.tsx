@@ -27,7 +27,7 @@ interface Props {
   rules: RuleRow[];
 }
 
-const leeg = { naam: '', geb: '', ouder: '', email: '', tel: '', groep: '', niveau: '', start: '', min: '', notities: '', slots: [] as Slot[], factoren: {} as Record<string, boolean> };
+const leeg = { naam: '', geb: '', ouder: '', email: '', tel: '', groep: '', niveau: '', start: '', ins: '', min: '', notities: '', slots: [] as Slot[], factoren: {} as Record<string, boolean> };
 
 export default function InschrijvingenBeheer({ org, actor, offerings, entries, rules }: Props) {
   const router = useRouter();
@@ -35,6 +35,8 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
   const [filter, setFilter] = useState<string>('alle');
   const [paneel, setPaneel] = useState<'geen' | 'nieuw' | 'import'>('geen');
   const [form, setForm] = useState({ ...leeg, groep: offerings[0]?.id ?? '' });
+  // Id van de inschrijving die je aan het wijzigen bent; null = nieuwe inschrijving.
+  const [bewerk, setBewerk] = useState<string | null>(null);
   const [plak, setPlak] = useState('');
   const [importGroep, setImportGroep] = useState(offerings[0]?.id ?? '');
   const [bezig, setBezig] = useState(false);
@@ -50,29 +52,75 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
     await createClient().from('audit_log').insert({ org_id: org.id, actor_label: actor, action, entity: 'inschrijving', entity_id, metadata });
   }
 
+  function wijzig(e: EntryRow) {
+    setBewerk(e.id);
+    setMelding(null);
+    setForm({
+      naam: e.participant_name, geb: e.participant_birthdate ?? '', ouder: e.guardian_name, email: e.guardian_email,
+      tel: e.guardian_phone ?? '', groep: e.offering_id ?? offerings[0]?.id ?? '', niveau: e.level ?? '',
+      start: e.desired_start_date ?? '', ins: e.registered_at.slice(0, 10), min: e.min_slots ? String(e.min_slots) : '',
+      notities: e.internal_notes ?? '', slots: e.preferred_slots ?? [], factoren: { ...(e.priority_factors ?? {}) },
+    });
+    setPaneel('nieuw');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function sluitFormulier() {
+    setBewerk(null);
+    setForm({ ...leeg, groep: offerings[0]?.id ?? '' });
+    setPaneel('geen');
+  }
+
   async function opslaan(e: React.FormEvent) {
     e.preventDefault();
     setBezig(true);
     setMelding(null);
     const g = groepVan(form.groep);
-    const { data, error } = await createClient()
+    const velden = {
+      offering_id: g?.id ?? null,
+      location_id: g?.location_id ?? null,
+      participant_name: form.naam.trim(),
+      participant_birthdate: form.geb || null,
+      guardian_name: form.ouder.trim(),
+      guardian_email: form.email.trim().toLowerCase(),
+      guardian_phone: form.tel.trim() || null,
+      preferred_slots: form.slots,
+      min_slots: form.min && Number(form.min) < form.slots.length ? Number(form.min) : null,
+      level: form.niveau.trim() || null,
+      desired_start_date: form.start || null,
+      priority_factors: form.factoren,
+      internal_notes: form.notities.trim() || null,
+    };
+    const supabase = createClient();
+
+    if (bewerk) {
+      const oud = entries.find((x) => x.id === bewerk)!;
+      const nieuw = { ...velden, ...(form.ins && form.ins !== oud.registered_at.slice(0, 10) ? { registered_at: `${form.ins}T12:00:00Z` } : {}) };
+      // Welke velden zijn veranderd? Dat komt in het log, zonder de inhoud van notities.
+      const LABEL: Record<string, string> = {
+        offering_id: 'groep', participant_name: 'naam', participant_birthdate: 'geboortedatum', guardian_name: `naam ${cfg.guardian}`,
+        guardian_email: 'e-mail', guardian_phone: 'telefoon', preferred_slots: cfg.slotMode === 'dagen' ? 'dagen' : 'lesmomenten',
+        min_slots: 'minimum dagen', level: 'niveau', desired_start_date: 'startdatum', priority_factors: 'voorrang',
+        internal_notes: 'notitie', registered_at: 'inschrijfdatum',
+      };
+      const norm = (v: unknown) => JSON.stringify(v ?? null);
+      const gewijzigd = Object.keys(LABEL).filter((k) => k in nieuw && norm((nieuw as Record<string, unknown>)[k]) !== norm((oud as unknown as Record<string, unknown>)[k]));
+      if (gewijzigd.length === 0) {
+        setBezig(false);
+        return sluitFormulier();
+      }
+      const { error } = await supabase.from('waitlist_entries').update(nieuw).eq('id', bewerk);
+      setBezig(false);
+      if (error) return setMelding({ soort: 'fout', tekst: `Opslaan lukte niet: ${error.message}` });
+      await log('inschrijving_gewijzigd', bewerk, { gewijzigd: gewijzigd.map((k) => LABEL[k]) });
+      setMelding({ soort: 'goed', tekst: `${form.naam} is bijgewerkt (${gewijzigd.map((k) => LABEL[k]).join(', ')}). Vastgelegd in het log.` });
+      sluitFormulier();
+      return router.refresh();
+    }
+
+    const { data, error } = await supabase
       .from('waitlist_entries')
-      .insert({
-        org_id: org.id,
-        offering_id: g?.id ?? null,
-        location_id: g?.location_id ?? null,
-        participant_name: form.naam.trim(),
-        participant_birthdate: form.geb || null,
-        guardian_name: form.ouder.trim(),
-        guardian_email: form.email.trim().toLowerCase(),
-        guardian_phone: form.tel.trim() || null,
-        preferred_slots: form.slots,
-        min_slots: form.min ? Number(form.min) : null,
-        level: form.niveau.trim() || null,
-        desired_start_date: form.start || null,
-        priority_factors: form.factoren,
-        internal_notes: form.notities.trim() || null,
-      })
+      .insert({ org_id: org.id, ...velden, ...(form.ins ? { registered_at: `${form.ins}T12:00:00Z` } : {}) })
       .select('id')
       .single();
     setBezig(false);
@@ -99,7 +147,9 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
         guardian_email: r.guardian_email,
         guardian_phone: r.guardian_phone,
         preferred_slots: r.dagen.length ? r.dagen : g?.slots ?? [],
-        priority_factors: { broer_zus: r.broer_zus },
+        min_slots: r.min_slots,
+        desired_start_date: r.desired_start_date,
+        priority_factors: { broer_zus: r.broer_zus, ...(r.doorstroom ? { doorstroom: true } : {}), ...(r.personeel ? { personeel: true } : {}) },
         ...(r.registered_at ? { registered_at: r.registered_at } : {}),
       };
     });
@@ -130,7 +180,7 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
         </div>
         <div className="flex gap-2">
           <button className="knop-rustig" onClick={() => setPaneel(paneel === 'import' ? 'geen' : 'import')} aria-expanded={paneel === 'import'}>Lijst plakken uit Excel</button>
-          <button className="knop-hoofd" onClick={() => setPaneel(paneel === 'nieuw' ? 'geen' : 'nieuw')} aria-expanded={paneel === 'nieuw'}>Inschrijving toevoegen</button>
+          <button className="knop-hoofd" onClick={() => (paneel === 'nieuw' ? sluitFormulier() : (setBewerk(null), setPaneel('nieuw')))} aria-expanded={paneel === 'nieuw'}>Inschrijving toevoegen</button>
         </div>
       </div>
 
@@ -145,7 +195,7 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
           <h2 className="text-2xl font-extrabold">Lijst plakken</h2>
           <p className="mt-1 max-w-2xl text-kalk">
             Selecteer in Excel of Google Sheets je hele lijst inclusief de kopregel, kopieer en plak hier. Kolommen worden herkend op naam:
-            kind, geboortedatum, ouder, e-mail, telefoon, inschrijfdatum, groep, dagen, broer/zus.
+            kind, geboortedatum, ouder, e-mail, telefoon, inschrijfdatum, groep, dagen, broer/zus{org.sector === 'kinderopvang' ? ', gewenste startdatum, minimaal (aantal dagen), doorstroom, personeel' : ', startdatum'}.
           </p>
           <textarea className="veld mt-4 h-40 font-mono text-sm" value={plak} onChange={(e) => setPlak(e.target.value)} aria-label="Geplakte lijst" />
           <div className="mt-3 max-w-sm">
@@ -173,7 +223,7 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
 
       {paneel === 'nieuw' && (
         <form onSubmit={opslaan} className="vlak mt-6 grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
-          <h2 className="text-2xl font-extrabold sm:col-span-2">Nieuwe inschrijving</h2>
+          <h2 className="text-2xl font-extrabold sm:col-span-2">{bewerk ? `${form.naam || 'Inschrijving'} wijzigen` : 'Nieuwe inschrijving'}</h2>
           <div><label className="label" htmlFor="f-naam">Naam {cfg.participant.enkelvoud}</label><input id="f-naam" required className="veld" value={form.naam} onChange={(e) => setForm({ ...form, naam: e.target.value })} /></div>
           <div><label className="label" htmlFor="f-geb">Geboortedatum</label><input id="f-geb" type="date" className="veld" value={form.geb} onChange={(e) => setForm({ ...form, geb: e.target.value })} /></div>
           <div><label className="label" htmlFor="f-ouder">Naam {cfg.guardian}</label><input id="f-ouder" required className="veld" value={form.ouder} onChange={(e) => setForm({ ...form, ouder: e.target.value })} /></div>
@@ -204,7 +254,8 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
             </div>
           )}
           {cfg.usesLevel && <div><label className="label" htmlFor="f-niv">Niveau</label><input id="f-niv" className="veld" value={form.niveau} onChange={(e) => setForm({ ...form, niveau: e.target.value })} /></div>}
-          <div><label className="label" htmlFor="f-start">Gewenste startdatum</label><input id="f-start" type="date" className="veld" value={form.start} onChange={(e) => setForm({ ...form, start: e.target.value })} /></div>
+          <div><label className="label" htmlFor="f-start">Gewenste startdatum</label><input id="f-start" type="date" className="veld" value={form.start} onChange={(e) => setForm({ ...form, start: e.target.value })} /><p className="hulp">De {cfg.guardian} ziet de plek in de rij vanaf deze datum.</p></div>
+          <div><label className="label" htmlFor="f-ins">Inschrijfdatum</label><input id="f-ins" type="date" className="veld" value={form.ins} onChange={(e) => setForm({ ...form, ins: e.target.value })} /><p className="hulp">{bewerk ? 'Telt mee voor de volgorde. Een wijziging komt in het log.' : 'Leeg = vandaag.'}</p></div>
           {kenmerken.length > 0 && (
             <fieldset className="sm:col-span-2">
               <legend className="label">Voorrang</legend>
@@ -217,7 +268,10 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
             </fieldset>
           )}
           <div className="sm:col-span-2"><label className="label" htmlFor="f-not">Interne notitie</label><textarea id="f-not" className="veld" rows={2} value={form.notities} onChange={(e) => setForm({ ...form, notities: e.target.value })} /><p className="hulp">Alleen zichtbaar voor jullie organisatie, nooit voor de {cfg.guardian}.</p></div>
-          <div className="sm:col-span-2"><button className="knop-hoofd" disabled={bezig}>{bezig ? 'Bezig met opslaan…' : 'Op de wachtlijst zetten'}</button></div>
+          <div className="flex flex-wrap gap-2 sm:col-span-2">
+            <button className="knop-hoofd" disabled={bezig}>{bezig ? 'Bezig met opslaan…' : bewerk ? 'Wijzigingen opslaan' : 'Op de wachtlijst zetten'}</button>
+            {bewerk && <button type="button" className="knop-rustig" onClick={sluitFormulier} disabled={bezig}>Annuleren</button>}
+          </div>
         </form>
       )}
 
@@ -253,11 +307,19 @@ export default function InschrijvingenBeheer({ org, actor, offerings, entries, r
                     <p className="text-sm text-kalk">{e.guardian_name} · {e.guardian_email}</p>
                   </td>
                   <td className="px-4 py-3">{groepVan(e.offering_id)?.name ?? '—'}</td>
-                  <td className="px-4 py-3 text-sm capitalize">{e.preferred_slots.map(slotText).join(', ') || 'flexibel'}</td>
+                  <td className="px-4 py-3 text-sm">
+                    <span className="capitalize">{e.preferred_slots.map(slotText).join(', ') || 'flexibel'}</span>
+                    {e.desired_start_date && <span className="block text-kalk">vanaf {formatDate(e.desired_start_date)}</span>}
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3 text-sm">{formatDate(e.registered_at)}</td>
                   <td className="px-4 py-3 text-sm">{STATUS[e.status]}</td>
                   <td className="px-4 py-3 text-right">
-                    {e.status === 'wachtend' && <button className="text-sm text-kalk underline hover:text-alarm" onClick={() => terugtrekken(e)}>Van lijst halen</button>}
+                    {e.status === 'wachtend' && (
+                      <span className="flex justify-end gap-4 whitespace-nowrap">
+                        <button className="text-sm font-bold underline" onClick={() => wijzig(e)}>Wijzigen</button>
+                        <button className="text-sm text-kalk underline hover:text-alarm" onClick={() => terugtrekken(e)}>Van lijst halen</button>
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
