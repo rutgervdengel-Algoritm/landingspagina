@@ -181,3 +181,19 @@ body {
 .landing[data-thema="opvang-warm"] .l-knop-rustig { border-width: 2px; border-color: #2D5A4A; color: #2D5A4A; background: transparent; }
 .landing[data-thema="opvang-warm"] .l-knop-rustig:hover { background: #2D5A4A; color: #FFFFFF; }
 .landing[data-thema="opvang-warm"] .l-vlak { border-color: #E8DFD0; }
+
+/* Opvang en BSO, centrale pagina: licht, strak, veel wit. Inkt met het geel van het volgnummer. */
+.landing[data-thema="helder"] {
+  --l-bg: #F6F7F9; --l-vlak: #FFFFFF; --l-tekst: #111A2E; --l-zacht: #566074; --l-lijn: #E1E5EC;
+  --l-accent: #FFC93C; --l-accent-tekst: #111A2E; --l-sterk: #111A2E; --l-sterk-tekst: #FFFFFF;
+  --l-band: #111A2E; --l-band-tekst: #E9EDF5; --l-band-accent: #FFC93C; --l-zachtvlak: #EEF1F6;
+  --l-op: #1F6F6B; --l-neer: #B4382A;
+  --l-kop: "Fraunces", Georgia, serif;
+  --l-radius: 1.25rem;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.landing[data-thema="helder"] :where(h1, h2) { font-weight: 600; letter-spacing: -0.02em; line-height: 1.08; }
+.landing[data-thema="helder"] :where(h3) { font-family: "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -0.01em; }
+.landing[data-thema="helder"] .l-knop { border-radius: 9999px; }
+.landing[data-thema="helder"] .oog { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--l-zacht); }
+.landing[data-thema="helder"] .pil { display: inline-flex; align-items: center; border: 1px solid var(--l-lijn); background: var(--l-vlak); border-radius: 9999px; padding: 0.6rem 1.25rem; font-weight: 600; }

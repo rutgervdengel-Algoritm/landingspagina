@@ -1,5 +1,5 @@
-import Keuze from '@/components/landing/Keuze';
+import Opvang from '@/components/landing/Opvang';
 
 export default function Home() {
-  return <Keuze />;
+  return <Opvang />;
 }

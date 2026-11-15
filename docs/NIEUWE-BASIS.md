@@ -61,3 +61,11 @@ Alle drie staan live op project `wachtlijst-pilot` (eu-central-1).
 
 Open: site is niet openbaar (Vercel-beveiliging, geen domein), geen melding bij een nieuwe aanmelding,
 database pauzeert op het gratis plan na een week zonder activiteit.
+
+## Eén site voor opvang en BSO (15 november 2026)
+
+- `/` is de centrale landingspagina voor dagopvang, peuteropvang en BSO (`components/landing/Opvang.tsx`,
+  thema `helder`: Fraunces + Inter, inkt met geel). `/kinderopvang` en `/bso` verwijzen hierheen.
+- Zwemles en sport staan los op `/branches/zwemles` en `/branches/sport`, niet gelinkt vanaf `/`
+  en met `noindex`. `/zwemles` en `/sport` verwijzen daarheen.
+- De keuzepagina en de oude ontwerpen (warm, zakelijk) zijn verwijderd; terug te halen uit git.

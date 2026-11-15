@@ -14,11 +14,11 @@ export default function AppVenster({ sector: pagina }: { sector: LandingSector }
   const momenten = demo.offering.slots.map(slotText).join(' en ');
 
   return (
-    <figure className="l-vlak overflow-hidden shadow-xl" style={{ boxShadow: '0 24px 48px -24px rgba(45, 90, 74, 0.35)' }}>
+    <figure className="l-vlak overflow-hidden shadow-xl" style={{ boxShadow: '0 30px 60px -30px color-mix(in srgb, var(--l-tekst) 45%, transparent)' }}>
       <div className="flex items-center gap-2 border-b border-l-lijn px-4 py-3">
-        <span className="h-3 w-3 rounded-full" style={{ background: '#D9956A' }} aria-hidden />
-        <span className="h-3 w-3 rounded-full" style={{ background: '#ECB892' }} aria-hidden />
-        <span className="h-3 w-3 rounded-full" style={{ background: '#6BB8AD' }} aria-hidden />
+        <span className="h-3 w-3 rounded-full" style={{ background: 'var(--l-lijn)' }} aria-hidden />
+        <span className="h-3 w-3 rounded-full" style={{ background: 'var(--l-lijn)' }} aria-hidden />
+        <span className="h-3 w-3 rounded-full" style={{ background: 'var(--l-accent)' }} aria-hidden />
         <span className="ml-2 truncate text-sm text-l-zacht">Eenplekje, plek vrijgekomen</span>
       </div>
       <div className="p-5">
@@ -28,9 +28,9 @@ export default function AppVenster({ sector: pagina }: { sector: LandingSector }
 
         <ol className="mt-4 grid gap-2">
           {rij.slice(0, 4).map((c, i) => (
-            <li key={c.entryId} className="rounded-xl px-3 py-2.5" style={{ background: i === 0 ? '#EEF7F5' : '#FDFBF7', border: `1px solid ${i === 0 ? '#ABDBD4' : '#F0EADF'}` }}>
+            <li key={c.entryId} className="rounded-xl px-3 py-2.5" style={{ background: i === 0 ? 'color-mix(in srgb, var(--l-accent) 16%, white)' : 'var(--l-bg)', border: `1px solid ${i === 0 ? 'color-mix(in srgb, var(--l-accent) 70%, white)' : 'var(--l-lijn)'}` }}>
               <div className="flex items-center gap-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold" style={{ background: i === 0 ? '#5BA89D' : '#F0EADF', color: i === 0 ? '#FFFFFF' : '#2D5A4A' }}>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold" style={{ background: i === 0 ? 'var(--l-accent)' : 'var(--l-zachtvlak)', color: 'var(--l-tekst)' }}>
                   {i + 1}
                 </span>
                 <span className="min-w-0 flex-1 truncate font-bold">{c.participantName}</span>
@@ -41,8 +41,8 @@ export default function AppVenster({ sector: pagina }: { sector: LandingSector }
                   {eerste.parts.filter((p) => p.score > 0).slice(0, 3).map((p) => (
                     <li key={p.key}>
                       <span className="block">{p.explanation}</span>
-                      <span className="mt-0.5 block h-1 overflow-hidden rounded-full" style={{ background: '#D5EDEA' }}>
-                        <span className="block h-full rounded-full" style={{ width: `${p.max ? (p.score / p.max) * 100 : 0}%`, background: '#5BA89D' }} />
+                      <span className="mt-0.5 block h-1 overflow-hidden rounded-full" style={{ background: 'var(--l-lijn)' }}>
+                        <span className="block h-full rounded-full" style={{ width: `${p.max ? (p.score / p.max) * 100 : 0}%`, background: 'var(--l-op)' }} />
                       </span>
                     </li>
                   ))}
@@ -53,7 +53,7 @@ export default function AppVenster({ sector: pagina }: { sector: LandingSector }
         </ol>
         <div className="mt-4 flex items-center justify-between gap-3">
           <span className="text-xs text-l-zacht">Namen verzonnen</span>
-          <span className="rounded-full px-4 py-2 text-sm font-bold text-white" style={{ background: '#B56A3B' }}>Voorstel doen</span>
+          <span className="rounded-full px-4 py-2 text-sm font-bold text-white" style={{ background: 'var(--l-sterk)' }}>Voorstel doen</span>
         </div>
       </div>
       <figcaption className="sr-only">Voorbeeld van het scherm Plek vrijgekomen in Eenplekje, met de volgorde en de uitleg voor de eerste kandidaat.</figcaption>

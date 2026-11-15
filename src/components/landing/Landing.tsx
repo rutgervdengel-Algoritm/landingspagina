@@ -7,7 +7,7 @@ import RijDemo from './RijDemo';
 import AppVenster from './AppVenster';
 import { Lock, MapPin, Smartphone } from 'lucide-react';
 import PilotFormulier from './PilotFormulier';
-import { DEMO_TODAY, FAQ, LANDING, VOLGORDE, type LandingSector } from './content';
+import { ANDERE_BRANCHES, DEMO_TODAY, FAQ, LANDING, PAKKETTEN, ZORG_OPVANG, type LandingSector } from './content';
 
 /** Golfrand voor zwemles: de enige decoratie op die pagina. */
 function Golf({ boven, onder }: { boven: string; onder: string }) {
@@ -25,15 +25,6 @@ const ZORG_KORT = [
   { kop: 'Gescheiden per organisatie', tekst: 'Elke organisatie ziet alleen haar eigen wachtlijst. Dat is in de database zelf afgedwongen.' },
   { kop: 'Elk besluit vastgelegd', tekst: 'Voorstellen, reacties en wijzigingen staan in een log dat niet te wijzigen is.' },
   { kop: 'Afspraken op papier', tekst: 'Voor de start van de pilot sluiten we samen een verwerkersovereenkomst.' },
-];
-
-const ZORG_OPVANG = [
-  { kop: 'Rolverdeling', tekst: 'Jullie organisatie is verwerkingsverantwoordelijke, Eenplekje is verwerker. Dat staat in een verwerkersovereenkomst voordat er echte gegevens in gaan.' },
-  { kop: 'Opslag in Europa', tekst: 'De database staat in een datacenter in Frankfurt.' },
-  { kop: 'Afgeschermd per organisatie', tekst: 'Medewerkers zien alleen de wachtlijst van hun eigen organisatie. Dat is in de database zelf afgedwongen, niet alleen in het scherm.' },
-  { kop: 'Ouders zien alleen hun eigen kind', tekst: 'Ouders loggen in met het e-mailadres dat bij jullie bekend is. Ze zien geen andere gezinnen en geen interne notities.' },
-  { kop: 'Onwijzigbaar log', tekst: 'Elk voorstel, elke reactie en elke wijziging van regels staat met tijd, persoon en reden vast. Ook wij kunnen dat log niet aanpassen.' },
-  { kop: 'Verwijderen bij stoppen', tekst: 'Stoppen jullie, dan verwijderen we alle gegevens van jullie organisatie.' },
 ];
 
 const LOG_VOORBEELD = [
@@ -60,10 +51,6 @@ function OmcirkeldeKop({ tekst }: { tekst: string }) {
   );
 }
 
-// Pakketten waaruit opvangorganisaties een export kunnen aanleveren. Alleen namen, geen logo's:
-// er is geen koppeling of samenwerking met deze leveranciers.
-const PAKKETTEN = ['Flexkids', 'KidsVision', 'Portabase', 'Bitcare', 'KOVnet', 'KindPlanner', 'Jaamo', 'Kidsadmin', 'Proles'];
-
 export default function Landing({ sector: pagina, ontwerp }: { sector: LandingSector; ontwerp?: 'warm' }) {
   const s = LANDING[pagina];
   const sector = s.sector;
@@ -87,7 +74,7 @@ export default function Landing({ sector: pagina, ontwerp }: { sector: LandingSe
       <header className="sticky top-0 z-20 border-b border-l-lijn" style={{ background: 'color-mix(in srgb, var(--l-bg) 92%, transparent)', backdropFilter: 'blur(8px)' }}>
         {sport && <div className="h-1 bg-l-accent" aria-hidden />}
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <Link href="/" aria-label="Eenplekje, naar de keuzepagina" className="flex items-center gap-3">
+          <Link href={s.pad} aria-label={`Eenplekje voor ${s.voor}`} className="flex items-center gap-3">
             <Logo />
             <span className="hidden border-l border-l-lijn pl-3 text-sm font-bold text-l-zacht sm:inline">voor {s.voor}</span>
           </Link>
@@ -337,7 +324,7 @@ export default function Landing({ sector: pagina, ontwerp }: { sector: LandingSe
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-l-zacht sm:px-6">
           <Logo className="text-l-tekst" />
           <nav aria-label="Voettekst" className="flex flex-wrap gap-x-5 gap-y-2">
-            {VOLGORDE.filter((k) => k !== pagina).map((k) => (
+            {ANDERE_BRANCHES.filter((k) => k !== pagina).map((k) => (
               <Link key={k} href={LANDING[k].pad} className="hover:text-l-tekst">Eenplekje voor {LANDING[k].voor}</Link>
             ))}
             <Link href="/login" className="hover:text-l-tekst">Inloggen</Link>

@@ -7,6 +7,22 @@ export type LandingSector = Exclude<Sector, 'overig'> | 'bso';
 /** Volgorde op de startpagina en in de voettekst: opvang en BSO eerst. */
 export const VOLGORDE: LandingSector[] = ['kinderopvang', 'bso', 'zwemles', 'sport'];
 
+/** Zwemles en sport staan los van de opvangsite: eigen adres, niet gelinkt vanaf de startpagina. */
+export const ANDERE_BRANCHES: LandingSector[] = ['zwemles', 'sport'];
+
+/** Pakketten waaruit opvangorganisaties een export kunnen aanleveren. Alleen namen, geen logo's:
+ *  er is geen koppeling of samenwerking met deze leveranciers. */
+export const PAKKETTEN = ['Flexkids', 'KidsVision', 'Portabase', 'Bitcare', 'KOVnet', 'KindPlanner', 'Jaamo', 'Kidsadmin', 'Proles'];
+
+export const ZORG_OPVANG = [
+  { kop: 'Rolverdeling', tekst: 'Jullie organisatie is verwerkingsverantwoordelijke, Eenplekje is verwerker. Dat staat in een verwerkersovereenkomst voordat er echte gegevens in gaan.' },
+  { kop: 'Opslag in Europa', tekst: 'De database staat in een datacenter in Frankfurt.' },
+  { kop: 'Afgeschermd per organisatie', tekst: 'Medewerkers zien alleen de wachtlijst van hun eigen organisatie. Dat is in de database zelf afgedwongen, niet alleen in het scherm.' },
+  { kop: 'Ouders zien alleen hun eigen kind', tekst: 'Ouders loggen in met het e-mailadres dat bij jullie bekend is. Ze zien geen andere gezinnen en geen interne notities.' },
+  { kop: 'Onwijzigbaar log', tekst: 'Elk voorstel, elke reactie en elke wijziging van regels staat met tijd, persoon en reden vast. Ook wij kunnen dat log niet aanpassen.' },
+  { kop: 'Verwijderen bij stoppen', tekst: 'Stoppen jullie, dan verwijderen we alle gegevens van jullie organisatie.' },
+];
+
 export const DEMO_TODAY = '2026-11-04';
 
 interface Blok { kop: string; tekst: string }
@@ -64,7 +80,7 @@ const ZA: Slot = { dag: 'za', van: '09:00', tot: '10:00' };
 
 export const LANDING: Record<LandingSector, SectorLanding> = {
   zwemles: {
-    pad: '/zwemles',
+    pad: '/branches/zwemles',
     sector: 'zwemles',
     naam: 'Zwemles',
     voor: 'zwemscholen',
@@ -117,7 +133,7 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
     },
   },
   sport: {
-    pad: '/sport',
+    pad: '/branches/sport',
     sector: 'sport',
     naam: 'Sport',
     voor: 'sportclubs',
@@ -169,7 +185,7 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
     },
   },
   kinderopvang: {
-    pad: '/kinderopvang',
+    pad: '/',
     sector: 'kinderopvang',
     naam: 'Kinderopvang',
     voor: 'opvangorganisaties',
@@ -223,7 +239,7 @@ export const LANDING: Record<LandingSector, SectorLanding> = {
     },
   },
   bso: {
-    pad: '/bso',
+    pad: '/',
     sector: 'kinderopvang',
     naam: 'BSO',
     voor: 'BSO-locaties',
