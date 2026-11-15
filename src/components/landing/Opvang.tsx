@@ -3,6 +3,7 @@ import { Lock, MapPin, Smartphone } from 'lucide-react';
 import Logo from './Logo';
 import AppVenster from './AppVenster';
 import DemoWissel from './DemoWissel';
+import Video from './Video';
 import PilotFormulier from './PilotFormulier';
 import { FAQ, LANDING, PAKKETTEN, ZORG_OPVANG } from './content';
 import { BRAND } from '@/lib/brand';
@@ -77,6 +78,19 @@ export default function Opvang() {
           </div>
         </section>
 
+        {/* Productvideo, direct onder de hero */}
+        <section aria-labelledby="video-kop" className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 lg:pb-24">
+          <h2 id="video-kop" className="sr-only">Eenplekje in een minuut</h2>
+          <figure>
+            <div className="l-vlak overflow-hidden p-2 sm:p-3" style={{ boxShadow: '0 40px 80px -40px color-mix(in srgb, var(--l-tekst) 45%, transparent)' }}>
+              <div className="overflow-hidden rounded-[0.9rem]">
+                <Video vanzelf src="/videos/product.mp4" poster="/videos/product.jpg" label="Eenplekje in een minuut: plaatsingsbeleid, plek vrij, ouders en het beslissingslog" />
+              </div>
+            </div>
+            <figcaption className="mt-3 text-center text-sm text-l-zacht">{BRAND.name} in een minuut, zonder geluid. Namen en gegevens zijn verzonnen.</figcaption>
+          </figure>
+        </section>
+
         {/* Herkenbaar */}
         <section className="border-y border-l-lijn bg-l-vlak">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
@@ -106,6 +120,20 @@ export default function Opvang() {
               </li>
             ))}
           </ol>
+          <figure className="mt-12 grid items-center gap-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
+            <figcaption>
+              <h3 className="font-lkop text-2xl font-semibold sm:text-3xl">Bekijk de hele route</h3>
+              <p className="mt-3 text-l-zacht">
+                In twee minuten van inrichten en je lijst plakken tot een vrije BSO-plek, het voorstel en het log. Met de echte schermen.
+              </p>
+              <p className="mt-3 text-sm text-l-zacht">Zonder geluid. Namen en gegevens zijn verzonnen.</p>
+            </figcaption>
+            <div className="l-vlak overflow-hidden p-2">
+              <div className="overflow-hidden rounded-[0.9rem]">
+                <Video src="/videos/journey-opvang.mp4" poster="/videos/journey-opvang.jpg" label="De route voor de opvang in 14 stappen, van inrichten tot het beslissingslog" />
+              </div>
+            </div>
+          </figure>
         </section>
 
         {/* Interactieve rij */}
@@ -173,6 +201,12 @@ export default function Opvang() {
               <p className="mt-4 max-w-xl text-l-zacht">
                 Ouders willen vooral weten waar ze aan toe zijn en of het eerlijk gaat. Ze zien dezelfde regels en dezelfde berekening als jullie planning gebruikt.
               </p>
+              <figure className="mt-8 max-w-[18rem]">
+                <div className="overflow-hidden rounded-[2rem] border-[6px] border-l-tekst bg-l-tekst">
+                  <Video staand src="/videos/journey-ouder.mp4" poster="/videos/journey-ouder.jpg" label="Wat de ouder ziet: inloggen, de plek in de rij en een voorstel accepteren" />
+                </div>
+                <figcaption className="mt-3 text-sm text-l-zacht">Wat de ouder ziet, in ruim een minuut. Zonder geluid.</figcaption>
+              </figure>
             </div>
             <ul className="grid gap-4 sm:grid-cols-2">
               {OUDERS.map((p) => (
